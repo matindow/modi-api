@@ -1,0 +1,1024 @@
+openapi: 3.0.0
+info:
+  description: |
+   MODI api
+  version: 2-oas3
+  title: MODI2
+servers:
+  - url: https://indowsandbox.com/sfapi
+security:
+  - BasicAuth: []
+paths:
+  /orders:
+    post:
+      tags:
+        - order
+        - post
+      summary: create order
+      operationId: createOrder
+      responses:
+        '201':
+          description: order created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/order'
+        '400':
+          description: Invalid input
+      requestBody:
+        $ref: '#/components/requestBodies/order'
+  /orders/{order_id}:
+    get:
+      tags:
+        - order
+        - get
+      summary: get order by id
+      description: Returns a single order
+      operationId: getOrder
+      parameters:
+        - name: order_id
+          in: path
+          description: ID of order to return
+          required: true
+          schema:
+            type: string
+            example: '56070'
+        - name: items
+          in: query
+          description: return with items array
+          required: false
+          schema:
+            type: boolean
+            default: false
+        - name: sales_modifiers
+          in: query
+          description: return with sales modifiers array
+          required: false
+          schema:
+            type: boolean
+            default: false
+        - name: payments
+          in: query
+          description: return with payments array
+          required: false
+          schema:
+            type: boolean
+            default: false
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/order'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Order not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+    patch:
+      tags:
+        - order
+        - patch
+      summary: Update an existing order by id
+      operationId: updateOrder
+      parameters:
+        - name: order_id
+          in: path
+          description: ID of order to update
+          required: true
+          schema:
+            type: string
+            example: '56070'
+      responses:
+        '200':
+          description: order updated
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Order not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+      requestBody:
+        $ref: '#/components/requestBodies/order'
+    delete:
+      tags:
+        - order
+        - delete
+      summary: Delete an existing order by id
+      operationId: deleteOrder
+      parameters:
+        - name: order_id
+          in: path
+          description: ID of order to delete
+          required: true
+          schema:
+            type: string
+            example: '56070'
+      responses:
+        '200':
+          description: order deleted
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Order not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'          
+  /estimates:
+    post:
+      tags:
+        - estimate
+        - post
+      summary: create estimate
+      operationId: createEstimate
+      responses:
+        '201':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/estimate'      
+        '400':
+          description: Invalid input
+      requestBody:
+        $ref: '#/components/requestBodies/estimate'
+  /estimates/{estimate_id}:
+    get:
+      tags:
+        - estimate
+        - get
+      summary: get estimate by id
+      description: Returns a single estimate
+      operationId: getEstimate
+      parameters:
+        - name: estimate_id
+          in: path
+          description: ID of estimate to return
+          required: true
+          schema:
+            type: string
+            example: '17419'
+        - name: items
+          in: query
+          description: return with items array
+          required: false
+          schema:
+            type: boolean
+            default: false
+        - name: sales_modifiers
+          in: query
+          description: return with sales modifiers array
+          required: false
+          schema:
+            type: boolean
+            default: false        
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/estimate'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Estimate not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'          
+    patch:
+      tags:
+        - estimate
+        - patch
+      summary: Update an existing estimate by id
+      operationId: updateEstimate
+      parameters:
+        - name: estimate_id
+          in: path
+          description: ID of estimate to update
+          required: true
+          schema:
+            type: string
+            example: '17419'
+      responses:
+        '200':
+          description: estimate updated
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Estimate not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'          
+      requestBody:
+        $ref: '#/components/requestBodies/estimate'
+    delete:
+      tags:
+        - estimate
+        - delete
+      summary: Delete an existing estimate by id
+      operationId: deleteEstimate
+      parameters:
+        - name: estimate_id
+          in: path
+          description: ID of estimate to delete
+          required: true
+          schema:
+            type: string
+            example: '17419'
+      responses:
+        '200':
+          description: estimate deleted
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Estimate not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'          
+  /customers:
+    post:
+      tags:
+        - customer
+        - post
+      summary: create customer
+      operationId: createCustomer
+      responses:
+        '201':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/customerResponse'      
+        '400':
+          description: Invalid input
+      requestBody:
+        $ref: '#/components/requestBodies/customer'
+  /customers/{customer_id}:
+    get:
+      tags:
+        - customer
+        - get
+      summary: get customer by id
+      description: Returns a single customer
+      operationId: getCustomer
+      parameters:
+        - name: customer_id
+          in: path
+          description: ID of customer to return
+          required: true
+          schema:
+            type: string
+            example: '94257'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/customer'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Customer not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'          
+    patch:
+      tags:
+        - customer
+        - patch
+      summary: Update an existing customer by id
+      operationId: updateCustomer
+      parameters:
+        - name: customer_id
+          in: path
+          description: ID of customer to update
+          required: true
+          schema:
+            type: string
+            example: '94257'
+      responses:
+        '200':
+          description: Customer updated
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Customer not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'          
+      requestBody:
+        $ref: '#/components/requestBodies/customer'
+    delete:
+      tags:
+        - customer
+        - delete
+      summary: Delete an existing customer by id
+      operationId: deleteCustomer
+      parameters:
+        - name: customer_id
+          in: path
+          description: ID of customer to delete
+          required: true
+          schema:
+            type: string
+            example: '17419'
+      responses:
+        '200':
+          description: Customer deleted
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Customer not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'          
+  /items:
+    post:
+      tags:
+        - item
+        - post
+      summary: add new item to order/estimate/site
+      operationId: createItem
+      responses:
+        '201':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/item'           
+        '400':
+          description: Invalid input
+      requestBody:
+        $ref: '#/components/requestBodies/item'
+  /items/{item_id}:
+    get:
+      tags:
+        - item
+        - get
+      summary: get item by id
+      description: Returns a single item
+      operationId: getItem
+      parameters:
+        - name: item_id
+          in: path
+          description: ID of item to return
+          required: true
+          schema:
+            type: string
+            example: '803365'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/item'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: item not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'          
+    patch:
+      tags:
+        - item
+        - patch
+      summary: Update an existing item by id
+      operationId: updateItem
+      parameters:
+        - name: item_id
+          in: path
+          description: ID of item to update
+          required: true
+          schema:
+            type: string
+            example: '56070'
+      responses:
+        '200':
+          description: item updated
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: item not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'          
+      requestBody:
+        $ref: '#/components/requestBodies/item'
+    delete:
+      tags:
+        - item
+        - delete
+      summary: Delete an existing item by id
+      operationId: deleteItem
+      parameters:
+        - name: item_id
+          in: path
+          description: ID of item to delete
+          required: true
+          schema:
+            type: string
+            example: '56070'
+      responses:
+        '200':
+          description: item deleted
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: item not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'          
+  /sales_modifiers:
+    post:
+      tags:
+        - sales_modifier
+        - post
+      summary: add new sales modifier to order/estimate
+      operationId: createSalesModifier
+      responses:
+        '201':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/sales_modifier'          
+        '400':
+          description: Invalid input
+      requestBody:
+        $ref: '#/components/requestBodies/salesModifierAdd'
+    get:
+      tags:
+        - sales_modifier
+        - get
+      summary: get sales modifier by code
+      description: Returns an array of sales modifiers
+      operationId: getSalesModifier
+      parameters:
+        - name: code
+          in: query
+          description: code of sales modifier to return
+          required: false
+          schema:
+            type: string
+            example: 'DirectSale Disct FB:TAPE20'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/sales_modifier'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: item not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'          
+  /sales_modifiers/{sales_modifier_id}:
+    delete:
+      tags:
+        - sales_modifier
+        - delete
+      summary: Delete sales modifier from order/estimate by id
+      operationId: deleteSalesModifier
+      parameters:
+        - name: sales_modifier_id
+          in: path
+          description: ID of sales modifier to delete
+          required: true
+          schema:
+            type: string
+            example: '88660'
+      responses:
+        '200':
+          description: sales modifier deleted
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: sales modifier not found
+  /payments:
+    post:
+      tags:
+        - payments
+        - post
+      summary: add new payment to order
+      operationId: createPayment
+      responses:
+        '201':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/paymentCreated'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+      requestBody:
+        $ref: '#/components/requestBodies/paymentAdd'
+  /payments/{payment_id}:
+    get:
+      tags:
+        - payments
+        - get
+      summary: get payment by id
+      operationId: getPayment
+      parameters:
+        - name: payment_id
+          in: path
+          description: ID of payment to delete
+          required: true
+          schema:
+            type: string
+            example: '2'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/payment'
+        '404':
+          description: payment not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'  
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+    patch:
+      tags:
+        - payments
+        - patch
+      summary: update payment by id
+      operationId: updatePayment
+      parameters:
+        - name: payment_id
+          in: path
+          description: ID of payment to update
+          required: true
+          schema:
+            type: string
+            example: '2'
+      responses:
+        '200':
+          description: payment updated
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: payment not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'          
+      requestBody:
+        $ref: '#/components/requestBodies/paymentAdd'
+    delete:
+      tags:
+        - payments
+        - delete
+      summary: delete payment by id
+      operationId: deletePayment
+      parameters:
+        - name: payment_id
+          in: path
+          description: ID of payment to delete
+          required: true
+          schema:
+            type: string
+            example: '2'
+      responses:
+        '200':
+          description: payment deleted
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: payment not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'          
+components:
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+  schemas:
+    error:
+      type: object
+      properties:
+        error:
+          type: string
+          example: 'Order not found'
+    order:
+      type: object
+      properties:
+        order_id:
+          type: string
+          example: '56057'
+        customer_id:
+          type: string
+          example: '353'
+        job_site_id:
+          type: string
+          example: '88678'
+        organization_name:
+          type: string
+          example: 'Indow HQ'
+        owner:
+          type: string
+          example: 'adminuser'
+        status_code:
+          type: string
+          example: '100'
+        jobsite_pricing:
+          type: boolean
+          default: false
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/item'
+        sales_modifiers:
+          type: array
+          items:
+            $ref: '#/components/schemas/sales_modifier'
+        payments:
+          type: array
+          items:
+            $ref: '#/components/schemas/payment'
+    estimate:
+      type: object
+      properties:
+        customer_id:
+          type: string
+          example: '353'
+        job_site_id:
+          type: string
+          example: '88678'
+        organization_name:
+          type: string
+          example: 'Indow HQ'
+        owner:
+          type: string
+          example: 'adminuser'
+        estimate_total:
+          type: number
+          format: double
+          example: 100
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/item'
+        sales_modifiers:
+          type: array
+          items:
+            $ref: '#/components/schemas/sales_modifier'
+    item:
+      type: object
+      properties:
+        order_id:
+          type: string
+          example: '88673'
+        estimate_id:
+          type: string
+          example: '88673'
+        site_id:
+          type: string
+          example: '88673'
+        shape:
+          type: string
+          example: 'Rectangle'
+        room:
+          type: string
+          example: 'room1'
+        location:
+          type: string
+          example: 'loc1'
+        floor:
+          type: string
+          example: 'floor1'
+        status:
+          type: string
+          example: 'Include'
+        product:
+          type: string
+          example: 'T3 Insert'
+        product_type:
+          type: string
+          example: 'MG'
+        tubing:
+          type: string
+          example: 'White'
+        frame_step:
+          type: string
+          example: '1'
+          nullable: true
+        frame_depth:
+          type: string
+          example: 'Less than 5/8 in.'
+        notes:
+          type: string
+          example: 'note'
+        A:
+          type: number
+          format: double
+          nullable: true
+          example: 10
+        B:
+          type: number
+          format: double
+          nullable: true
+          example: 11
+        C:
+          type: number
+          format: double
+          nullable: true
+          example: 12
+        D:
+          type: number
+          format: double
+          nullable: true
+          example: 13
+        E:
+          type: number
+          format: double
+          nullable: true
+          example: 14
+        F:
+          type: number
+          format: double
+          nullable: true
+          example: 15
+        width:
+          type: number
+          format: double
+          nullable: true
+          example: 10
+        height:
+          type: number
+          format: double
+          nullable: true
+          example: 20
+        spines:
+          type: string
+          nullable: true
+          example: 'None'
+        drafty_window:
+          type: boolean
+          default: false
+        special_geometry:
+          type: boolean
+          default: false
+        price:
+          type: number
+          format: double
+          nullable: true
+          example: 144
+        price_override:
+          type: number
+          format: double
+          nullable: true
+          example: 144
+        tool_type:
+          type: string
+          example: 'laser'
+        id:
+          type: string
+          example: '803555'
+    sales_modifier:
+      type: object
+      properties:
+        id:
+          type: string
+          example: '88590'
+        quantity:
+          type: integer
+          format: int64
+          example: 1
+        modifier:
+          type: string
+          example: 'dollar'
+        value:
+          type: number
+          format: double
+          example: 100
+    salesModifierAdd:
+      type: object
+      properties:
+        order_id:
+          type: string
+          example: '182433'
+        estimate_id:
+          type: string
+          example: '182433'
+        sales_modifier:
+          $ref: '#/components/schemas/sales_modifier'
+    payment:
+      type: object
+      properties:
+        payment_received:
+          type: string
+          example: '2021-10-22'
+        payment_type:
+          type: string
+          example: 'Check (down)'
+        payment_amount:
+          type: number
+          format: double
+          example: 200
+        id:
+          type: string
+          example: '803555'
+    paymentCreated:
+      type: object
+      properties:
+        order_id:
+          type: string
+          example: '56068'
+        payment_id:
+          type: string
+          example: '31808'
+    customer:
+      type: object
+      properties:
+        crm_id:
+          type: string
+          example: '0030L00f00d1v7DXcqtest'
+        customer_id:
+          type: string
+          example: '1'
+        job_site_id:
+          type: string
+          example: '2'
+        estimate_id:
+          type: string
+          example: '3'
+        first_name:
+          type: string
+          example: 'TestFirst'
+        last_name:
+          type: string
+          example: 'Collerweather'
+        email:
+          type: string
+          example: 'test@test.com'
+        create_job_site:
+          type: boolean
+          default: false
+        create_estimate:
+          type: boolean
+          default: false
+        organization_name:
+          type: string
+          example: 'Indow HQ'
+        owner:
+          type: string
+          example: 'adminuser'
+        address:
+          type: string
+          example: '504 Branard St.'
+        address_ext:
+          type: string
+          example: 'Unit A'
+        city:
+          type: string
+          example: 'Houston'
+        state:
+          type: string
+          example: 'TX'
+        zipcode:
+          type: string
+          example: '77006'
+        shipping:
+          type: boolean
+          default: false
+    customerResponse:
+      type: object
+      required: ['customer_id']
+      properties:
+        crm_id:
+          type: string
+          example: '0030L00f00d1v7DXcqtest'
+        customer_id:
+          type: string
+          example: '1'
+        job_site_id:
+          type: string
+          example: '2'
+        estimate_id:
+          type: string
+          example: '3'
+        first_name:
+          type: string
+          example: 'TestFirst'
+        last_name:
+          type: string
+          example: 'Collerweather'
+        email:
+          type: string
+          example: 'test@test.com'
+        create_job_site:
+          type: boolean
+          default: false
+        create_estimate:
+          type: boolean
+          default: false
+        organization_name:
+          type: string
+          example: 'Indow HQ'
+        owner:
+          type: string
+          example: 'adminuser'
+        address:
+          type: string
+          example: '504 Branard St.'
+        address_ext:
+          type: string
+          example: 'Unit A'
+        city:
+          type: string
+          example: 'Houston'
+        state:
+          type: string
+          example: 'TX'
+        zipcode:
+          type: string
+          example: '77006'
+        shipping:
+          type: boolean
+          default: false
+  requestBodies:
+    order:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/order'
+      description: order
+      required: true
+    estimate:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/estimate'
+      description: estimate
+      required: true
+    customer:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/customer'
+      description: customer
+      required: true
+    item:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/item'
+      description: item
+      required: true
+    salesModifierAdd:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/salesModifierAdd'
+      description: sales modifier
+      required: true
+    paymentAdd:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/payment'
+      description: payment
+      required: true
