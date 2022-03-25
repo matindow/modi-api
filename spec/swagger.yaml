@@ -5,7 +5,10 @@ info:
   version: 2-oas3
   title: MODI2
 servers:
-  - url: https://indowsandbox.com/sfapi
+  - url: https://indowsandbox.com/sfapi/v1
+    description: Sandbox server (uses test data)
+  - url: https://modi.indowwindows.com/sfapi/v1
+    description: Production server (uses live data)
 security:
   - BasicAuth: []
 paths:
@@ -259,7 +262,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/customerResponse'      
+                $ref: '#/components/schemas/customer'      
         '400':
           description: Invalid input
       requestBody:
@@ -461,20 +464,18 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/sales_modifier'          
+                $ref: '#/components/schemas/sales_modifier'          
         '400':
           description: Invalid input
       requestBody:
-        $ref: '#/components/requestBodies/salesModifierAdd'
+        $ref: '#/components/requestBodies/sales_modifier'
     get:
       tags:
         - sales_modifier
         - get
       summary: get sales modifier by code
       description: Returns an array of sales modifiers
-      operationId: getSalesModifier
+      operationId: getSalesModifiersByCode
       parameters:
         - name: code
           in: query
@@ -501,6 +502,36 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'          
   /sales_modifiers/{sales_modifier_id}:
+    get:
+      tags:
+        - sales_modifier
+        - get
+      summary: get sales_modifier by id
+      description: Returns a single sales_modifier
+      operationId: getSalesModifierById
+      parameters:
+        - name: sales_modifier_id
+          in: path
+          description: ID of sales_modifier to return
+          required: true
+          schema:
+            type: string
+            example: '803365'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/sales_modifier'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: sales modifier not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'         
     delete:
       tags:
         - sales_modifier
@@ -535,7 +566,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/paymentCreated'
+                $ref: '#/components/schemas/payment'
         default:
           description: Unexpected error
           content:
@@ -543,7 +574,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
       requestBody:
-        $ref: '#/components/requestBodies/paymentAdd'
+        $ref: '#/components/requestBodies/payment'
   /payments/{payment_id}:
     get:
       tags:
@@ -604,7 +635,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'          
       requestBody:
-        $ref: '#/components/requestBodies/paymentAdd'
+        $ref: '#/components/requestBodies/payment'
     delete:
       tags:
         - payments
@@ -645,13 +676,13 @@ components:
     order:
       type: object
       properties:
-        order_id:
+        id:
           type: string
           example: '56057'
         customer_id:
           type: string
           example: '353'
-        job_site_id:
+        site_id:
           type: string
           example: '88678'
         organization_name:
@@ -681,10 +712,13 @@ components:
     estimate:
       type: object
       properties:
+        id:
+          type: string
+          example: '1'
         customer_id:
           type: string
           example: '353'
-        job_site_id:
+        site_id:
           type: string
           example: '88678'
         organization_name:
@@ -823,6 +857,12 @@ components:
         id:
           type: string
           example: '88590'
+        order_id:
+          type: string
+          example: '1'
+        estimate_id:
+          type: string
+          example: '2'
         quantity:
           type: integer
           format: int64
@@ -834,20 +874,45 @@ components:
           type: number
           format: double
           example: 100
-    salesModifierAdd:
+        modifier_type:
+          type: string
+          example: 'fee'
+        modifier_type_id:
+          type: string
+          example: '8'
+        description:
+          type: string
+          example: 'Grip Strips'
+        code:
+          type: string
+          example: 'Direct Sale Disct FB:TAPE20'
+        amount:
+          type: number
+          format: double
+          example: 1
+        start_date:
+          type: string
+          format: date-time
+          example: '1969-12-31T16:00:00Z'
+        end_date:
+          type: string
+          format: date-time
+          example: '2099-05-02T00:00:00Z'
+        group:
+          type: string
+          example: "Indow HQ"
+        is_active:
+          type: boolean
+          default: false
+        is_calculate_tax:
+          type: boolean
+          default: false
+    payment:
       type: object
       properties:
         order_id:
           type: string
-          example: '182433'
-        estimate_id:
-          type: string
-          example: '182433'
-        sales_modifier:
-          $ref: '#/components/schemas/sales_modifier'
-    payment:
-      type: object
-      properties:
+          example: '1'
         payment_received:
           type: string
           example: '2021-10-22'
@@ -861,15 +926,6 @@ components:
         id:
           type: string
           example: '803555'
-    paymentCreated:
-      type: object
-      properties:
-        order_id:
-          type: string
-          example: '56068'
-        payment_id:
-          type: string
-          example: '31808'
     customer:
       type: object
       properties:
@@ -879,7 +935,7 @@ components:
         customer_id:
           type: string
           example: '1'
-        job_site_id:
+        site_id:
           type: string
           example: '2'
         estimate_id:
@@ -924,61 +980,47 @@ components:
         shipping:
           type: boolean
           default: false
-    customerResponse:
+        addresses:
+          type: array
+          items:
+            $ref: '#/components/schemas/address'
+    address:
       type: object
-      required: ['customer_id']
       properties:
-        crm_id:
+        id:
           type: string
-          example: '0030L00f00d1v7DXcqtest'
-        customer_id:
+          example: "82915"
+        user_id:
           type: string
-          example: '1'
-        job_site_id:
+          example: "94257"
+        address_type:
           type: string
-          example: '2'
-        estimate_id:
-          type: string
-          example: '3'
-        first_name:
-          type: string
-          example: 'TestFirst'
-        last_name:
-          type: string
-          example: 'Collerweather'
-        email:
-          type: string
-          example: 'test@test.com'
-        create_job_site:
-          type: boolean
-          default: false
-        create_estimate:
-          type: boolean
-          default: false
-        organization_name:
-          type: string
-          example: 'Indow HQ'
-        owner:
-          type: string
-          example: 'adminuser'
+          example: "shipping"
         address:
           type: string
-          example: '504 Branard St.'
+          example: "504 Branard St."
         address_ext:
           type: string
-          example: 'Unit A'
+          example: "Unit A"
         city:
           type: string
-          example: 'Houston'
+          example: "Houston"
         state:
           type: string
-          example: 'TX'
+          example: "TX"
         zipcode:
           type: string
-          example: '77006'
-        shipping:
-          type: boolean
-          default: false
+          example: "11803"
+        address_type_other:
+          type: string
+          example: ""
+        country:
+          type: string
+          example: "United States"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2021-11-26T07:20:54Z"
   requestBodies:
     order:
       content:
@@ -1008,14 +1050,14 @@ components:
             $ref: '#/components/schemas/item'
       description: item
       required: true
-    salesModifierAdd:
+    sales_modifier:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/salesModifierAdd'
+            $ref: '#/components/schemas/sales_modifier'
       description: sales modifier
       required: true
-    paymentAdd:
+    payment:
       content:
         application/json:
           schema:
