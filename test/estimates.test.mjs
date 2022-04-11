@@ -39,7 +39,7 @@ describe('estimates', async () => {
                 .send(customerLocal)
                 .auth(username, password)
             estimateLocal.customer_id = res.body.customer_id
-            estimateLocal.job_site_id = res.body.job_site_id
+            estimateLocal.site_id = res.body.site_id
             expect(res.status).to.equal(201)
         })
         describe('401', async () => {
@@ -85,7 +85,7 @@ describe('estimates', async () => {
                 .auth(username, password)
                 .expect(200)
 
-            await request.delete(`/job_sites/${estimateResponse.job_site_id}`)
+            await request.delete(`/job_sites/${estimateResponse.site_id}`)
                 .auth(username, password)
                 .expect(200)
 
@@ -109,7 +109,7 @@ describe('estimates', async () => {
 
             // add required object references to example data before create
             estimateLocal.customer_id = personResponse.body.customer_id
-            estimateLocal.job_site_id = personResponse.body.job_site_id
+            estimateLocal.site_id = personResponse.body.site_id
 
             let estimateResponse = await request.post('/estimates')
                 .send(estimateLocal)
@@ -166,7 +166,7 @@ describe('estimates', async () => {
                 .auth(username, password)
                 .expect(200)
 
-            await request.delete(`/job_sites/${estimateLocal.job_site_id}`)
+            await request.delete(`/job_sites/${estimateLocal.site_id}`)
                 .auth(username, password)
                 .expect(200)
 
@@ -191,7 +191,7 @@ describe('estimates', async () => {
             // add required object references to example data before create
             firstCustomerId = personResponse.body.customer_id
             estimateLocal.customer_id = personResponse.body.customer_id
-            estimateLocal.job_site_id = personResponse.body.job_site_id
+            estimateLocal.site_id = personResponse.body.site_id
 
             let estimateResponse = await request.post('/estimates')
                 .send(estimateLocal)
@@ -246,7 +246,7 @@ describe('estimates', async () => {
                     .send(customerLocal)
                     .auth(username, password)
                 estimateLocal.customer_id = res.body.customer_id
-                estimateLocal.job_site_id = res.body.job_site_id
+                estimateLocal.site_id = res.body.site_id
                 expect(res.status).to.equal(201)
                 secondCustomer = res.body
             })
@@ -285,7 +285,7 @@ describe('estimates', async () => {
                 .auth(username, password)
                 .expect(200)
 
-            await request.delete(`/job_sites/${estimateLocal.job_site_id}`)
+            await request.delete(`/job_sites/${estimateLocal.site_id}`)
                 .auth(username, password)
                 .expect(200)
 
@@ -305,7 +305,7 @@ describe('estimates', async () => {
                 .auth(username, password)
                 .expect(201)
             estimateLocal.customer_id = personResponse.body.customer_id
-            estimateLocal.job_site_id = personResponse.body.job_site_id
+            estimateLocal.site_id = personResponse.body.site_id
 
             let estimateResponse = await request.post('/estimates')
                 .send(estimateLocal)
@@ -355,7 +355,7 @@ describe('estimates', async () => {
             await request.delete(`/estimates/${estimateLocal.id}`)
                 .auth(username, password)
                 .expect(404)
-            await request.delete(`/job_sites/${estimateLocal.job_site_id}`)
+            await request.delete(`/job_sites/${estimateLocal.site_id}`)
                 .auth(username, password)
                 .expect(200)
             await request.delete(`/customers/${estimateLocal.customer_id}`)

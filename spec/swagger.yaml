@@ -178,7 +178,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/error'          
-  /job_sites:
+  /sites:
     post:
       tags:
         - site
@@ -206,7 +206,7 @@ paths:
                 $ref: '#/components/schemas/error'          
       requestBody:
         $ref: '#/components/requestBodies/site'
-  /job_sites/{site_id}:
+  /sites/{site_id}:
     get:
       tags:
         - site
@@ -483,7 +483,7 @@ paths:
       summary: create estimate
       operationId: createEstimate
       responses:
-        '200':
+        '201':
           description: successful operation
           content:
             application/json:
@@ -1035,6 +1035,41 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/error'         
+    patch:
+      tags:
+        - sales_modifier
+        - post
+      summary: update existing sales modifier
+      operationId: updateSalesModifier
+      parameters:
+        - name: sales_modifier_id
+          in: path
+          description: ID of sales modifier to update
+          required: true
+          schema:
+            type: string
+            example: '88660'      
+      responses:
+        '201':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/sales_modifier'          
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'         
+        '401':
+          description: Access Denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'          
+      requestBody:
+        $ref: '#/components/requestBodies/sales_modifier'
     delete:
       tags:
         - sales_modifier
@@ -1235,7 +1270,7 @@ components:
         customer_id:
           type: string
           example: '353'
-        job_site_id:
+        site_id:
           type: string
           example: '88678'
         organization_name:
@@ -1271,7 +1306,7 @@ components:
         customer_id:
           type: string
           example: '353'
-        job_site_id:
+        site_id:
           type: string
           example: '88678'
         organization_name:
@@ -1485,10 +1520,10 @@ components:
         crm_id:
           type: string
           example: '0030L00f00d1v7DXcqtest'
-        customer_id:
+        id:
           type: string
           example: '1'
-        job_site_id:
+        site_id:
           type: string
           example: '2'
           nullable: true

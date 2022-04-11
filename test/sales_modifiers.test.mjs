@@ -35,6 +35,7 @@ describe('sales_modifiers', async () => {
         let customer_id
         let orderLocal = { ...order }
         let orderResponse
+        let sales_modifierLocal = { ...sales_modifier }
         before('create customer, jobsite, estimate', async () => {
             let customerLocal = { ...customer }
             customerLocal.create_job_site = true
@@ -44,15 +45,16 @@ describe('sales_modifiers', async () => {
                 .auth(username, password)
             expect(res.status).to.equal(201)
             orderLocal.customer_id = res.body.customer_id
-            orderLocal.job_site_id = res.body.job_site_id
-            site_id = res.body.job_site_id
+            orderLocal.site_id = res.body.site_id
+            site_id = res.body.site_id
             customer_id = res.body.customer_id
 
             orderResponse = await request.post('/orders')
                 .send(orderLocal)
                 .auth(username, password)
-            expect(orderResponse.status).to.equal(201)
             order_id = orderResponse.body.id
+            sales_modifierLocal.order_id = order_id
+            expect(orderResponse.status).to.equal(201)
 
         })
         describe('401', async () => {
@@ -79,8 +81,6 @@ describe('sales_modifiers', async () => {
             })
         });
         describe('201', async () => {
-            let sales_modifierLocal = { ...sales_modifier }
-            sales_modifierLocal.order_id = order_id
             let res
             it('should create a sales_modifier', async () => {
                 res = await request.post('/sales_modifiers')
@@ -122,7 +122,6 @@ describe('sales_modifiers', async () => {
     describe('GET', async () => {
         let customer_id
         let sales_modifierLocal = { ...sales_modifier }
-        let order_id
         let site_id
         before('create customer, job site, order', async () => {
             let orderLocal = { ...order }
@@ -134,19 +133,19 @@ describe('sales_modifiers', async () => {
                 .auth(username, password)
                 .expect(201)
 
-            orderLocal.job_site_id = personResponse.job_site_id
-            site_id = personResponse.job_site_id
+            orderLocal.site_id = personResponse.body.site_id
+            orderLocal.customer_id = personResponse.body.customer_id
+            site_id = personResponse.site_id
 
 
             let orderResponse = await request.post('/orders')
                 .send(orderLocal)
                 .auth(username, password)
             expect(orderResponse.status).to.equal(201)
-            order_id = orderResponse.body.id
 
             // add required object references to example data before create
-            sales_modifierLocal.order_id = personResponse.body.order_id
-            customer_id = personResponse.body.id
+            sales_modifierLocal.order_id = orderResponse.body.id
+            customer_id = personResponse.body.customer_id
 
             let sales_modifierResponse = await request.post('/sales_modifiers')
                 .send(sales_modifierLocal)
@@ -232,8 +231,9 @@ describe('sales_modifiers', async () => {
                 .auth(username, password)
                 .expect(201)
 
-            orderLocal.job_site_id = personResponse.job_site_id
-            site_id = personResponse.job_site_id
+            orderLocal.site_id = personResponse.body.site_id
+            orderLocal.customer_id = personResponse.body.customer_id
+            site_id = personResponse.body.site_id
 
 
             let orderResponse = await request.post('/orders')
@@ -243,8 +243,8 @@ describe('sales_modifiers', async () => {
             order_id = orderResponse.body.id
 
             // add required object references to example data before create
-            sales_modifierLocal.order_id = personResponse.body.order_id
-            customer_id = personResponse.body.id
+            sales_modifierLocal.order_id = orderResponse.body.id
+            customer_id = personResponse.body.customer_id
 
             let sales_modifierResponse = await request.post('/sales_modifiers')
                 .send(sales_modifierLocal)
@@ -294,13 +294,13 @@ describe('sales_modifiers', async () => {
         describe('200', async () => {
             let orderLocal = { ...order }
             orderLocal.customer_id = customer_id
-            orderLocal.job_site_id = site_id
+            orderLocal.site_id = site_id
             before('create order', async () => {
                 let res = await request.post('/orders')
                     .send(orderLocal)
                     .auth(username, password)
                 orderLocal.customer_id = res.body.customer_id
-                orderLocal.job_site_id = res.body.job_site_id
+                orderLocal.site_id = res.body.site_id
                 expect(res.status).to.equal(201)
             })
             let res
@@ -322,7 +322,7 @@ describe('sales_modifiers', async () => {
                 res = await request.get(`/sales_modifiers/${sales_modifierLocal.id}`)
                     .auth(username, password)
                 expect(res.body.order_id).to.equal(orderLocal.id)
-                console.log('order_id after PATCH: ' + res.body.job_site_id)
+                console.log('order_id after PATCH: ' + res.body.site_id)
             })
             after('delete order', async () => {
                 await request.delete(`/orders/${orderLocal.id}`)
@@ -364,8 +364,9 @@ describe('sales_modifiers', async () => {
                 .auth(username, password)
                 .expect(201)
 
-            orderLocal.job_site_id = personResponse.job_site_id
-            site_id = personResponse.job_site_id
+            orderLocal.site_id = personResponse.body.site_id
+            orderLocal.customer_id = personResponse.body.customer_id
+            site_id = personResponse.site_id
 
 
             let orderResponse = await request.post('/orders')
@@ -375,8 +376,8 @@ describe('sales_modifiers', async () => {
             order_id = orderResponse.body.id
 
             // add required object references to example data before create
-            sales_modifierLocal.order_id = personResponse.body.order_id
-            customer_id = personResponse.body.id
+            sales_modifierLocal.order_id = orderResponse.body.id
+            customer_id = personResponse.body.customer_id
 
             let sales_modifierResponse = await request.post('/sales_modifiers')
                 .send(sales_modifierLocal)

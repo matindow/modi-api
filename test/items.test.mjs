@@ -45,8 +45,8 @@ describe('items', async () => {
                 .auth(username, password)
             expect(res.status).to.equal(201)
             orderLocal.customer_id = res.body.customer_id
-            orderLocal.job_site_id = res.body.job_site_id
-            site_id = res.body.job_site_id
+            orderLocal.site_id = res.body.site_id
+            site_id = res.body.site_id
             estimate_id = res.body.estimate_id
             customer_id = res.body.customer_id
 
@@ -129,7 +129,7 @@ describe('items', async () => {
             })
             describe('job_site', async () => {
                 let itemLocal = { ...item }
-                itemLocal.job_site_id = site_id
+                itemLocal.site_id = site_id
                 let res
                 it('should create an item', async () => {
                     res = await request.post('/items')
@@ -186,7 +186,7 @@ describe('items', async () => {
                 .expect(201)
 
             // add required object references to example data before create
-            itemLocal.job_site_id = personResponse.body.job_site_id
+            itemLocal.site_id = personResponse.body.site_id
             customer_id = personResponse.body.id
 
             console.log(itemLocal)
@@ -246,7 +246,7 @@ describe('items', async () => {
                 .auth(username, password)
                 .expect(200)
 
-            await request.delete(`/job_sites/${itemLocal.job_site_id}`)
+            await request.delete(`/job_sites/${itemLocal.site_id}`)
                 .auth(username, password)
                 .expect(200)
 
@@ -271,9 +271,9 @@ describe('items', async () => {
                 .expect(201)
 
             // add required object references to example data before create
-            itemLocal.job_site_id = personResponse.body.job_site_id
+            itemLocal.site_id = personResponse.body.site_id
             customer_id = personResponse.body.id
-            site_id = personResponse.body.job_site_id
+            site_id = personResponse.body.site_id
 
             let itemResponse = await request.post('/items')
                 .send(itemLocal)
@@ -323,13 +323,13 @@ describe('items', async () => {
         describe('200', async () => {
             let orderLocal = { ...order }
             orderLocal.customer_id = customer_id
-            orderLocal.job_site_id = site_id
+            orderLocal.site_id = site_id
             before('create order', async () => {
                 let res = await request.post('/orders')
                     .send(orderLocal)
                     .auth(username, password)
                 orderLocal.customer_id = res.body.customer_id
-                orderLocal.job_site_id = res.body.job_site_id
+                orderLocal.site_id = res.body.site_id
                 expect(res.status).to.equal(201)
             })
             let res
@@ -351,7 +351,7 @@ describe('items', async () => {
                 res = await request.get(`/items/${itemLocal.id}`)
                     .auth(username, password)
                 expect(res.body.order_id).to.equal(orderLocal.id)
-                console.log('site_id after PATCH: ' + res.body.job_site_id)
+                console.log('site_id after PATCH: ' + res.body.site_id)
             })
             after('delete order', async () => {
                 await request.delete(`/orders/${orderLocal.id}`)
@@ -388,9 +388,9 @@ describe('items', async () => {
                 .expect(201)
 
             // add required object references to example data before create
-            itemLocal.job_site_id = personResponse.body.job_site_id
+            itemLocal.site_id = personResponse.body.site_id
             customer_id = personResponse.body.id
-            site_id = personResponse.body.job_site_id
+            site_id = personResponse.body.site_id
 
             let itemResponse = await request.post('/items')
                 .send(itemLocal)

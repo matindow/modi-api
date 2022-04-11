@@ -39,7 +39,7 @@ describe('orders', async () => {
                 .send(customerLocal)
                 .auth(username, password)
             orderLocal.customer_id = res.body.customer_id
-            orderLocal.job_site_id = res.body.job_site_id
+            orderLocal.site_id = res.body.site_id
             expect(res.status).to.equal(201)
         })
         describe('401', async () => {
@@ -85,7 +85,7 @@ describe('orders', async () => {
                 .auth(username, password)
                 .expect(404)
 
-            await request.delete(`/job_sites/${orderResponse.job_site_id}`)
+            await request.delete(`/job_sites/${orderResponse.site_id}`)
                 .auth(username, password)
                 .expect(200)
 
@@ -109,7 +109,7 @@ describe('orders', async () => {
 
             // add required object references to example data before create
             orderLocal.customer_id = personResponse.body.customer_id
-            orderLocal.job_site_id = personResponse.body.job_site_id
+            orderLocal.site_id = personResponse.body.site_id
 
             let orderResponse = await request.post('/orders')
                 .send(orderLocal)
@@ -166,7 +166,7 @@ describe('orders', async () => {
                 .auth(username, password)
                 .expect(200)
 
-            await request.delete(`/job_sites/${orderLocal.job_site_id}`)
+            await request.delete(`/job_sites/${orderLocal.site_id}`)
                 .auth(username, password)
                 .expect(200)
 
@@ -191,7 +191,7 @@ describe('orders', async () => {
             // add required object references to example data before create
             firstCustomerId = personResponse.body.customer_id
             orderLocal.customer_id = personResponse.body.customer_id
-            orderLocal.job_site_id = personResponse.body.job_site_id
+            orderLocal.site_id = personResponse.body.site_id
 
             let orderResponse = await request.post('/orders')
                 .send(orderLocal)
@@ -246,7 +246,7 @@ describe('orders', async () => {
                     .send(customerLocal)
                     .auth(username, password)
                 orderLocal.customer_id = res.body.customer_id
-                orderLocal.job_site_id = res.body.job_site_id
+                orderLocal.site_id = res.body.site_id
                 expect(res.status).to.equal(201)
                 secondCustomer = res.body
             })
@@ -285,7 +285,7 @@ describe('orders', async () => {
                 .auth(username, password)
                 .expect(200)
 
-            await request.delete(`/job_sites/${orderLocal.job_site_id}`)
+            await request.delete(`/job_sites/${orderLocal.site_id}`)
                 .auth(username, password)
                 .expect(200)
 
@@ -305,7 +305,7 @@ describe('orders', async () => {
                 .auth(username, password)
                 .expect(201)
             orderLocal.customer_id = personResponse.body.customer_id
-            orderLocal.job_site_id = personResponse.body.job_site_id
+            orderLocal.site_id = personResponse.body.site_id
 
             let orderResponse = await request.post('/orders')
                 .send(orderLocal)
@@ -355,7 +355,7 @@ describe('orders', async () => {
             await request.delete(`/orders/${orderLocal.id}`)
                 .auth(username, password)
                 .expect(200)
-            await request.delete(`/job_sites/${orderLocal.job_site_id}`)
+            await request.delete(`/job_sites/${orderLocal.site_id}`)
                 .auth(username, password)
                 .expect(200)
             await request.delete(`/customers/${orderLocal.customer_id}`)

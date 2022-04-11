@@ -27,7 +27,7 @@ chai.use(chaiResponseValidator.default(path.join(__dirname, '/spec/swagger.yaml'
 // res.should.satisfyApiSpec
 // chai.use(matchApiSchema({ apiDefinitionsPath, reportCoverage: true, exportCoverage: true }))
 
-describe.only('payments', async () => {
+describe('payments', async () => {
 
     describe('POST', async () => {
         let site_id
@@ -45,8 +45,8 @@ describe.only('payments', async () => {
                 .auth(username, password)
             expect(res.status).to.equal(201)
             orderLocal.customer_id = res.body.customer_id
-            orderLocal.job_site_id = res.body.job_site_id
-            site_id = res.body.job_site_id
+            orderLocal.site_id = res.body.site_id
+            site_id = res.body.site_id
             customer_id = res.body.customer_id
 
             orderResponse = await request.post('/orders')
@@ -135,9 +135,9 @@ describe.only('payments', async () => {
                 .auth(username, password)
                 .expect(201)
 
-            orderLocal.job_site_id = personResponse.body.job_site_id
+            orderLocal.site_id = personResponse.body.site_id
             orderLocal.customer_id = personResponse.body.customer_id
-            site_id = personResponse.job_site_id
+            site_id = personResponse.site_id
 
 
             let orderResponse = await request.post('/orders')
@@ -217,7 +217,7 @@ describe.only('payments', async () => {
         })
     })
 
-    describe.only('PATCH', async () => {
+    describe('PATCH', async () => {
         // get example data
         let paymentLocal = { ...payment }
         let customer_id
@@ -233,9 +233,9 @@ describe.only('payments', async () => {
                 .auth(username, password)
                 .expect(201)
 
-            orderLocal.job_site_id = personResponse.body.job_site_id
+            orderLocal.site_id = personResponse.body.site_id
             orderLocal.customer_id = personResponse.body.customer_id
-            site_id = personResponse.body.job_site_id
+            site_id = personResponse.body.site_id
 
 
             let orderResponse = await request.post('/orders')
@@ -243,15 +243,17 @@ describe.only('payments', async () => {
                 .auth(username, password)
             expect(orderResponse.status).to.equal(201)
             order_id = orderResponse.body.id
+            console.log(orderResponse.body)
 
             // add required object references to example data before create
-            paymentLocal.order_id = orderResponse.body.order_id
+            paymentLocal.order_id = orderResponse.body.id
             customer_id = personResponse.body.customer_id
 
             let paymentResponse = await request.post('/payments')
                 .send(paymentLocal)
                 .auth(username, password)
             paymentLocal = paymentResponse.body
+            console.log(paymentResponse.body)
             expect(paymentResponse.status).to.equal(201)
         })
         describe('401', async () => {
@@ -296,13 +298,13 @@ describe.only('payments', async () => {
         describe('200', async () => {
             let orderLocal = { ...order }
             orderLocal.customer_id = customer_id
-            orderLocal.job_site_id = site_id
+            orderLocal.site_id = site_id
             before('create order', async () => {
                 let res = await request.post('/orders')
                     .send(orderLocal)
                     .auth(username, password)
                 orderLocal.customer_id = res.body.customer_id
-                orderLocal.job_site_id = res.body.job_site_id
+                orderLocal.site_id = res.body.site_id
                 expect(res.status).to.equal(201)
             })
             let res
@@ -324,7 +326,7 @@ describe.only('payments', async () => {
                 res = await request.get(`/payments/${paymentLocal.id}`)
                     .auth(username, password)
                 expect(res.body.order_id).to.equal(orderLocal.id)
-                console.log('order_id after PATCH: ' + res.body.job_site_id)
+                console.log('order_id after PATCH: ' + res.body.site_id)
             })
             after('delete order', async () => {
                 await request.delete(`/orders/${orderLocal.id}`)
@@ -366,9 +368,9 @@ describe.only('payments', async () => {
                 .auth(username, password)
                 .expect(201)
 
-            orderLocal.job_site_id = personResponse.body.job_site_id
-            orderLocal.customer_id = personResponse.body.id
-            site_id = personResponse.job_site_id
+            orderLocal.site_id = personResponse.body.site_id
+            orderLocal.customer_id = personResponse.body.customer_id
+            site_id = personResponse.site_id
 
 
             let orderResponse = await request.post('/orders')
@@ -378,7 +380,7 @@ describe.only('payments', async () => {
             order_id = orderResponse.body.id
 
             // add required object references to example data before create
-            paymentLocal.order_id = orderResponse.body.order_id
+            paymentLocal.order_id = orderResponse.body.id
             customer_id = personResponse.body.customer_id
 
             let paymentResponse = await request.post('/payments')
