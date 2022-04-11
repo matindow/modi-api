@@ -1,0 +1,30 @@
+{
+  "name": "modi-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha --reporter mochawesome"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/matindow/modi-api.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/matindow/modi-api/issues"
+  },
+  "homepage": "https://github.com/matindow/modi-api#readme",
+  "devDependencies": {
+    "api-contract-validator": "^2.2.8",
+    "chai": "^4.3.6",
+    "chai-openapi-response-validator": "^0.14.2",
+    "mocha": "^9.2.2",
+    "mochawesome": "^7.1.3",
+    "supertest": "^6.2.2"
+  },
+  "dependencies": {
+    "dotenv": "^16.0.0"
+  }
+}
