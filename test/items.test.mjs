@@ -1,5 +1,4 @@
 import { customer, order, item } from './utility/exampleData.mjs'
-import { randomString } from './utility/utlity.mjs'
 import chai from 'chai';
 const { assert, expect } = chai
 chai.should()
@@ -7,7 +6,6 @@ import 'dotenv/config'
 import supertest from 'supertest';
 import * as path from 'path';
 import chaiResponseValidator from 'chai-openapi-response-validator';
-import { chaiPlugin as matchApiSchema } from 'api-contract-validator'
 
 const __dirname = path.resolve();
 
@@ -17,45 +15,29 @@ let baseURL = process.env.MODI_BASEURL
 
 let request = supertest(baseURL)
 
-const apiDefinitionsPath = path.join(__dirname, '/spec/swagger.yaml')
-
-
 // Sets the location of your OpenAPI Specification file
-// res.should.satisfyApiSpec
 chai.use(chaiResponseValidator.default(path.join(__dirname, '/spec/swagger.yaml')))
-
-// res.should.satisfyApiSpec
-// chai.use(matchApiSchema({ apiDefinitionsPath, reportCoverage: true, exportCoverage: true }))
 
 describe('items', async () => {
 
     describe('POST', async () => {
-        let site_id
-        let estimate_id
-        let order_id
-        let customer_id
         let orderLocal = { ...order }
-        let orderResponse
         before('create customer, jobsite, estimate', async () => {
             let customerLocal = { ...customer }
             customerLocal.create_job_site = true
             customerLocal.create_estimate = true
-            let res = await request.post('/customers')
+            let customerResponse = await request.post('/customers')
                 .send(customerLocal)
                 .auth(username, password)
-            expect(res.status).to.equal(201)
-            orderLocal.customer_id = res.body.customer_id
-            orderLocal.site_id = res.body.site_id
-            site_id = res.body.site_id
-            estimate_id = res.body.estimate_id
-            customer_id = res.body.customer_id
+                .expect(201)
+            orderLocal.customer_id = customerResponse.body.id
+            orderLocal.site_id = customerResponse.body.site_id
 
             let orderResponse = await request.post('/orders')
                 .send(orderLocal)
                 .auth(username, password)
-            expect(orderResponse.status).to.equal(201)
-            order_id = orderResponse.body.id
-
+                .expect(201)
+            orderLocal = orderResponse.body
         })
         describe('401', async () => {
             let res
@@ -74,7 +56,7 @@ describe('items', async () => {
                 res = await request.post('/items')
                     .send({ 'invalid': 'invalid' })
                     .auth(username, password)
-                expect(res.status).to.equal(400)
+                    .expect(400)
             });
             it('should satisfy api spec', () => {
                 res.should.satisfyApiSpec
@@ -83,71 +65,74 @@ describe('items', async () => {
         describe('201', async () => {
             describe('order', async () => {
                 let itemLocal = { ...item }
-                itemLocal.order_id = order_id
-                let res
+                itemLocal.order_id = orderLocal.id
+                let itemRes
                 it('should create an item', async () => {
-                    res = await request.post('/items')
+                    itemRes = await request.post('/items')
                         .send(itemLocal)
                         .auth(username, password)
-                    expect(res.status).to.equal(201)
+                        .expect(201)
                 });
                 it('should satisfy api spec', () => {
-                    res.should.satisfyApiSpec
+                    itemRes.should.satisfyApiSpec
                 })
                 it('should be visible on the order', async () => {
-                    let orderResponse = await request.get(`/orders/${order_id}`)
+                    let orderResponse = await request.get(`/orders/${orderLocal.id}`)
                         .auth(username, password)
+                        .expect(200)
                     expect(orderResponse.body.items.length).to.equal(1)
-                    expect(orderResponse.body.items[0].id).to.equal(res.body.id)
+                    expect(orderResponse.body.items[0].id).to.equal(itemRes.body.id)
                 })
                 after('delete item', async () => {
-                    await request.delete(`/items/${res.body.id}`)
+                    await request.delete(`/items/${itemRes.body.id}`)
                 })
             })
             describe('estimate', async () => {
                 let itemLocal = { ...item }
-                itemLocal.estimate_id = estimate_id
-                let res
+                itemLocal.estimate_id = orderLocal.estimate_id
+                let itemRes
                 it('should create an item', async () => {
-                    res = await request.post('/items')
+                    itemRes = await request.post('/items')
                         .send(itemLocal)
                         .auth(username, password)
-                    expect(res.status).to.equal(201)
+                        .expect(201)
                 });
                 it('should satisfy api spec', () => {
-                    res.should.satisfyApiSpec
+                    itemRes.should.satisfyApiSpec
                 })
                 it('should be visible on the estimate', async () => {
-                    let estimateResponse = await request.get(`/estimates/${estimate_id}`)
+                    let estimateResponse = await request.get(`/estimates/${orderLocal.estimate_id}`)
                         .auth(username, password)
+                        .expect(200)
                     expect(estimateResponse.body.items.length).to.equal(1)
-                    expect(estimateResponse.body.items[0].id).to.equal(res.body.id)
+                    expect(estimateResponse.body.items[0].id).to.equal(itemRes.body.id)
                 })
                 after('delete item', async () => {
-                    await request.delete(`/items/${res.body.id}`)
+                    await request.delete(`/items/${itemRes.body.id}`)
                 })
             })
-            describe('job_site', async () => {
+            describe('site', async () => {
                 let itemLocal = { ...item }
-                itemLocal.site_id = site_id
-                let res
+                itemLocal.site_id = orderLocal.site_id
+                let itemRes
                 it('should create an item', async () => {
-                    res = await request.post('/items')
+                    itemRes = await request.post('/items')
                         .send(itemLocal)
                         .auth(username, password)
-                    expect(res.status).to.equal(201)
+                        .expect(201)
                 });
                 it('should satisfy api spec', () => {
-                    res.should.satisfyApiSpec
+                    itemRes.should.satisfyApiSpec
                 })
-                it('should be visible on the job_site', async () => {
-                    let job_siteResponse = await request.get(`/job_sites/${site_id}`)
+                it('should be visible on the site', async () => {
+                    let siteResponse = await request.get(`/sites/${orderLocal.site_id}`)
                         .auth(username, password)
-                    expect(job_siteResponse.body.items.length).to.equal(1)
-                    expect(job_siteResponse.body.items[0].id).to.equal(res.body.id)
+                        .expect(200)
+                    expect(siteResponse.body.items.length).to.equal(1)
+                    expect(siteResponse.body.items[0].id).to.equal(itemRes.body.id)
                 })
                 after('delete item', async () => {
-                    await request.delete(`/items/${res.body.id}`)
+                    await request.delete(`/items/${itemRes.body.id}`)
                 })
             })
 
@@ -155,47 +140,43 @@ describe('items', async () => {
 
 
         after('delete order, jobsite, estimate, customer', async () => {
-            await request.delete(`/orders/${order_id}`)
+            await request.delete(`/orders/${orderLocal.id}`)
                 .auth(username, password)
                 .expect(200)
 
-            await request.delete(`/estimates/${estimate_id}`)
+            await request.delete(`/estimates/${orderLocal.estimate_id}`)
                 .auth(username, password)
                 .expect(200)
 
-            await request.delete(`/job_sites/${site_id}`)
+            await request.delete(`/sites/${orderLocal.site_id}`)
                 .auth(username, password)
                 .expect(200)
 
-            await request.delete(`/customers/${customer_id}`)
+            await request.delete(`/customers/${orderLocal.customer_id}`)
                 .auth(username, password)
                 .expect(200)
         })
     })
 
     describe('GET', async () => {
-        let customer_id
         let itemLocal = { ...item }
+        let customerLocal = { ...customer }
         before('create customer, job site', async () => {
-            let customerLocal = { ...customer }
             customerLocal.create_job_site = true
 
-            let personResponse = await request.post('/customers')
+            let customerResponse = await request.post('/customers')
                 .send(customerLocal)
                 .auth(username, password)
                 .expect(201)
 
             // add required object references to example data before create
-            itemLocal.site_id = personResponse.body.site_id
-            customer_id = personResponse.body.id
+            itemLocal.site_id = customerResponse.body.site_id
 
-            console.log(itemLocal)
             let itemResponse = await request.post('/items')
                 .send(itemLocal)
                 .auth(username, password)
+                .expect(201)
             itemLocal = itemResponse.body
-            console.log(itemResponse)
-            expect(itemResponse.status).to.equal(201)
         })
         describe('401', async () => {
             let res
@@ -211,18 +192,15 @@ describe('items', async () => {
         describe('404', async () => {
             let res
             it('should fail to get missing item', async () => {
-
                 // TODO: replace with dynamic "missing" id rather than hardcoded
                 let missing_id = '00000'
                 res = await request.get(`/items/${missing_id}`)
                     .auth(username, password)
                     .expect(404)
-
             })
             it('should satisfy api spec', () => {
                 res.should.satisfyApiSpec
             })
-
         })
 
         describe('200', async () => {
@@ -230,11 +208,7 @@ describe('items', async () => {
             it('should get an item', async () => {
                 res = await request.get(`/items/${itemLocal.id}`)
                     .auth(username, password)
-
-                // update local reference with successful response body
-                itemLocal = res.body
-                expect(res.status).to.equal(200)
-
+                    .expect(200)
             })
             it('should satisfy api spec', () => {
                 res.should.satisfyApiSpec
@@ -246,40 +220,38 @@ describe('items', async () => {
                 .auth(username, password)
                 .expect(200)
 
-            await request.delete(`/job_sites/${itemLocal.site_id}`)
+            await request.delete(`/sites/${itemLocal.site_id}`)
                 .auth(username, password)
                 .expect(200)
 
-            await request.delete(`/customers/${customer_id}`)
+            await request.delete(`/customers/${customerLocal.id}`)
                 .auth(username, password)
                 .expect(200)
         })
     })
 
     describe('PATCH', async () => {
-        // get example data
-        let itemLocal = { ...item }
-        let customer_id
-        let site_id
-        before('create customer, job site', async () => {
-            let customerLocal = { ...customer }
-            customerLocal.create_job_site = true
 
-            let personResponse = await request.post('/customers')
+        let itemLocal = { ...item }
+        let customerLocal = { ...customer }
+        before('create customer, job site', async () => {
+            customerLocal.create_job_site = true
+            customerLocal.create_estimate = true
+
+            let customerResponse = await request.post('/customers')
                 .send(customerLocal)
                 .auth(username, password)
                 .expect(201)
 
             // add required object references to example data before create
-            itemLocal.site_id = personResponse.body.site_id
-            customer_id = personResponse.body.id
-            site_id = personResponse.body.site_id
+            itemLocal.site_id = customerResponse.body.site_id
+            customerLocal = customerResponse.body
 
             let itemResponse = await request.post('/items')
                 .send(itemLocal)
                 .auth(username, password)
+                .expect(201)
             itemLocal = itemResponse.body
-            expect(itemResponse.status).to.equal(201)
         })
         describe('401', async () => {
             let res
@@ -299,8 +271,7 @@ describe('items', async () => {
                 res = await request.patch(`/items/${itemLocal.id}`)
                     .send({ 'invalid': 'invalid' })
                     .auth(username, password)
-                expect(res.status).to.equal(400)
-
+                    .expect(400)
             })
             it('should satisfy api spec', () => {
                 res.should.satisfyApiSpec
@@ -314,34 +285,19 @@ describe('items', async () => {
                 res = await request.patch(`/items/${missing_id}`)
                     .send(itemLocal)
                     .auth(username, password)
-                expect(res.status).to.equal(404)
+                    .expect(404)
             })
             it('should satisfy api spec', () => {
                 res.should.satisfyApiSpec
             })
         })
         describe('200', async () => {
-            let orderLocal = { ...order }
-            orderLocal.customer_id = customer_id
-            orderLocal.site_id = site_id
-            before('create order', async () => {
-                let res = await request.post('/orders')
-                    .send(orderLocal)
-                    .auth(username, password)
-                orderLocal.customer_id = res.body.customer_id
-                orderLocal.site_id = res.body.site_id
-                expect(res.status).to.equal(201)
-            })
             let res
             it('should update an item', async () => {
                 res = await request.patch(`/items/${itemLocal.id}`)
-                    .send({ "order_id": orderLocal.id, "site_id": "" })
+                    .send({ "estimate_id": customerLocal.estimate_id, "site_id": "" })
                     .auth(username, password)
-
-                // update local reference with successful response body
-                expect(res.status).to.equal(200)
-
-
+                    .expect(200)
 
             })
             it('should satisfy api spec', () => {
@@ -350,53 +306,50 @@ describe('items', async () => {
             it('should actually update item', async () => {
                 res = await request.get(`/items/${itemLocal.id}`)
                     .auth(username, password)
-                expect(res.body.order_id).to.equal(orderLocal.id)
-                console.log('site_id after PATCH: ' + res.body.site_id)
-            })
-            after('delete order', async () => {
-                await request.delete(`/orders/${orderLocal.id}`)
+                    .expect(200)
+                expect(res.body.estimate_id).to.equal(customerLocal.estimate_id)
             })
 
         })
 
-        after('delete job_site, item, customer', async () => {
+        after('delete item, estimate, site, customer', async () => {
             await request.delete(`/items/${itemLocal.id}`)
                 .auth(username, password)
                 .expect(200)
 
-            await request.delete(`/job_sites/${site_id}`)
+            await request.delete(`/estimates/${customerLocal.estimate_id}`)
                 .auth(username, password)
                 .expect(200)
 
-            await request.delete(`/customers/${customer_id}`)
+            await request.delete(`/sites/${customerLocal.site_id}`)
+                .auth(username, password)
+                .expect(200)
+
+            await request.delete(`/customers/${customerLocal.id}`)
                 .auth(username, password)
                 .expect(200)
         })
     })
     describe('DELETE', async () => {
-        // get example data
         let itemLocal = { ...item }
-        let customer_id
-        let site_id
+        let customerLocal = { ...customer }
         before('create customer, job site', async () => {
-            let customerLocal = { ...customer }
             customerLocal.create_job_site = true
 
-            let personResponse = await request.post('/customers')
+            let customerResponse = await request.post('/customers')
                 .send(customerLocal)
                 .auth(username, password)
                 .expect(201)
 
             // add required object references to example data before create
-            itemLocal.site_id = personResponse.body.site_id
-            customer_id = personResponse.body.id
-            site_id = personResponse.body.site_id
+            itemLocal.site_id = customerResponse.body.site_id
+            customerLocal = customerResponse.body
 
             let itemResponse = await request.post('/items')
                 .send(itemLocal)
                 .auth(username, password)
+                .expect(201)
             itemLocal = itemResponse.body
-            expect(itemResponse.status).to.equal(201)
         })
         describe('401', async () => {
             let res
@@ -418,7 +371,7 @@ describe('items', async () => {
                 res = await request.delete(`/items/${missing_id}`)
                     .send(itemLocal)
                     .auth(username, password)
-                expect(res.status).to.equal(404)
+                    .expect(404)
             })
             it('should satisfy api spec', () => {
                 res.should.satisfyApiSpec
@@ -429,8 +382,7 @@ describe('items', async () => {
             it('should delete an item', async () => {
                 res = await request.delete(`/items/${itemLocal.id}`)
                     .auth(username, password)
-                expect(res.status).to.equal(200)
-
+                    .expect(200)
             })
             it('should satisfy api spec', () => {
                 res.should.satisfyApiSpec
@@ -443,11 +395,11 @@ describe('items', async () => {
                 .auth(username, password)
                 .expect(404)
 
-            await request.delete(`/job_sites/${site_id}`)
+            await request.delete(`/sites/${customerLocal.site_id}`)
                 .auth(username, password)
                 .expect(200)
 
-            await request.delete(`/customers/${customer_id}`)
+            await request.delete(`/customers/${customerLocal.id}`)
                 .auth(username, password)
                 .expect(200)
         })

@@ -1,5 +1,4 @@
-import { customer, estimate as estimate } from './utility/exampleData.mjs'
-import { randomString } from './utility/utlity.mjs'
+import { customer, estimate } from './utility/exampleData.mjs'
 import chai from 'chai';
 const { assert, expect } = chai
 chai.should()
@@ -7,7 +6,6 @@ import 'dotenv/config'
 import supertest from 'supertest';
 import * as path from 'path';
 import chaiResponseValidator from 'chai-openapi-response-validator';
-import { chaiPlugin as matchApiSchema } from 'api-contract-validator'
 
 const __dirname = path.resolve();
 
@@ -17,30 +15,23 @@ let baseURL = process.env.MODI_BASEURL
 
 let request = supertest(baseURL)
 
-const apiDefinitionsPath = path.join(__dirname, '/spec/swagger.yaml')
-
-
 // Sets the location of your OpenAPI Specification file
 // res.should.satisfyApiSpec
 chai.use(chaiResponseValidator.default(path.join(__dirname, '/spec/swagger.yaml')))
-
-// res.should.satisfyApiSpec
-// chai.use(matchApiSchema({ apiDefinitionsPath, reportCoverage: true, exportCoverage: true }))
 
 describe('estimates', async () => {
 
     describe('POST', async () => {
         let estimateLocal = { ...estimate }
-        let estimateResponse
         before('create customer, jobsite', async () => {
             let customerLocal = { ...customer }
             customerLocal.create_job_site = true
-            let res = await request.post('/customers')
+            let customerResponse = await request.post('/customers')
                 .send(customerLocal)
                 .auth(username, password)
-            estimateLocal.customer_id = res.body.customer_id
-            estimateLocal.site_id = res.body.site_id
-            expect(res.status).to.equal(201)
+                .expect(201)
+            estimateLocal.customer_id = customerResponse.body.id
+            estimateLocal.site_id = customerResponse.body.site_id
         })
         describe('401', async () => {
             let res
@@ -71,51 +62,55 @@ describe('estimates', async () => {
                 res = await request.post('/estimates')
                     .send(estimateLocal)
                     .auth(username, password)
-                estimateResponse = res.body
-                expect(res.status).to.equal(201)
+                    .expect(201)
+                estimateLocal = res.body
             });
             it('should satisfy api spec', () => {
                 res.should.satisfyApiSpec
+            })
+            it('should actually have created an estimate', async () => {
+                await request.get(`/estimates/${estimateLocal.id}`)
+                    .auth(username, password)
+                    .expect(200)
             })
         });
 
 
         after('delete estimate, customer, jobsite', async () => {
-            await request.delete(`/estimates/${estimateResponse.id}`)
+            await request.delete(`/estimates/${estimateLocal.id}`)
                 .auth(username, password)
                 .expect(200)
 
-            await request.delete(`/job_sites/${estimateResponse.site_id}`)
+            await request.delete(`/sites/${estimateLocal.site_id}`)
                 .auth(username, password)
                 .expect(200)
 
-            await request.delete(`/customers/${estimateResponse.customer_id}`)
+            await request.delete(`/customers/${estimateLocal.customer_id}`)
                 .auth(username, password)
                 .expect(200)
         })
     })
 
     describe('GET', async () => {
-        // get example data
         let estimateLocal = { ...estimate }
         before('create customer, job site, estimate', async () => {
             let customerLocal = { ...customer }
             customerLocal.create_job_site = true
 
-            let personResponse = await request.post('/customers')
+            let customerResponse = await request.post('/customers')
                 .send(customerLocal)
                 .auth(username, password)
                 .expect(201)
 
             // add required object references to example data before create
-            estimateLocal.customer_id = personResponse.body.customer_id
-            estimateLocal.site_id = personResponse.body.site_id
+            estimateLocal.customer_id = customerResponse.body.id
+            estimateLocal.site_id = customerResponse.body.site_id
 
             let estimateResponse = await request.post('/estimates')
                 .send(estimateLocal)
                 .auth(username, password)
+                .expect(201)
             estimateLocal = estimateResponse.body
-            expect(estimateResponse.status).to.equal(201)
         })
         describe('401', async () => {
             let res
@@ -150,11 +145,7 @@ describe('estimates', async () => {
             it('should get an estimate', async () => {
                 res = await request.get(`/estimates/${estimateLocal.id}`)
                     .auth(username, password)
-
-                // update local reference with successful response body
-                estimateLocal = res.body
-                expect(res.status).to.equal(200)
-
+                    .expect(200)
             })
             it('should satisfy api spec', () => {
                 res.should.satisfyApiSpec
@@ -166,7 +157,7 @@ describe('estimates', async () => {
                 .auth(username, password)
                 .expect(200)
 
-            await request.delete(`/job_sites/${estimateLocal.site_id}`)
+            await request.delete(`/sites/${estimateLocal.site_id}`)
                 .auth(username, password)
                 .expect(200)
 
@@ -177,27 +168,26 @@ describe('estimates', async () => {
     })
 
     describe('PATCH', async () => {
-        // get example data
+
         let estimateLocal = { ...estimate }
-        let firstCustomerId
+        let customerLocal = { ...customer }
         before('create customer, job site, estimate', async () => {
-            let customerLocal = { ...customer }
             customerLocal.create_job_site = true
-            let personResponse = await request.post('/customers')
+            let customerResponse = await request.post('/customers')
                 .send(customerLocal)
                 .auth(username, password)
                 .expect(201)
 
+            customerLocal = customerResponse.body
             // add required object references to example data before create
-            firstCustomerId = personResponse.body.customer_id
-            estimateLocal.customer_id = personResponse.body.customer_id
-            estimateLocal.site_id = personResponse.body.site_id
+            estimateLocal.customer_id = customerLocal.id
+            estimateLocal.site_id = customerLocal.site_id
 
             let estimateResponse = await request.post('/estimates')
                 .send(estimateLocal)
                 .auth(username, password)
+                .expect(201)
             estimateLocal = estimateResponse.body
-            expect(estimateResponse.status).to.equal(201)
         })
         describe('401', async () => {
             let res
@@ -217,8 +207,7 @@ describe('estimates', async () => {
                 res = await request.patch(`/estimates/${estimateLocal.id}`)
                     .send({ 'invalid': 'invalid' })
                     .auth(username, password)
-                expect(res.status).to.equal(400)
-
+                    .expect(400)
             })
             it('should satisfy api spec', () => {
                 res.should.satisfyApiSpec
@@ -232,7 +221,7 @@ describe('estimates', async () => {
                 res = await request.patch(`/estimates/${missing_id}`)
                     .send(estimateLocal)
                     .auth(username, password)
-                expect(res.status).to.equal(404)
+                    .expect(404)
             })
             it('should satisfy api spec', () => {
                 res.should.satisfyApiSpec
@@ -241,27 +230,19 @@ describe('estimates', async () => {
         describe('200', async () => {
             let secondCustomer
             before('create second customer', async () => {
-                let customerLocal = { ...customer }
-                let res = await request.post('/customers')
+                secondCustomer = { ...customer }
+                let customerResponse = await request.post('/customers')
                     .send(customerLocal)
                     .auth(username, password)
-                estimateLocal.customer_id = res.body.customer_id
-                estimateLocal.site_id = res.body.site_id
-                expect(res.status).to.equal(201)
-                secondCustomer = res.body
+                    .expect(201)
+                secondCustomer = customerResponse.body
             })
             let res
             it('should update an estimate', async () => {
                 res = await request.patch(`/estimates/${estimateLocal.id}`)
-                    .send({ "customer_id": secondCustomer.customer_id })
+                    .send({ "customer_id": secondCustomer.id })
                     .auth(username, password)
-
-                // update local reference with successful response body
-                estimateLocal = res.body
-                expect(res.status).to.equal(200)
-
-
-
+                    .expect(200)
             })
             it('should satisfy api spec', () => {
                 res.should.satisfyApiSpec
@@ -269,13 +250,15 @@ describe('estimates', async () => {
             it('should actually update customer_id', async () => {
                 res = await request.get(`/estimates/${estimateLocal.id}`)
                     .auth(username, password)
-                expect(res.body.customer_id).to.equal(secondCustomer.customer_id)
+                expect(res.body.customer_id).to.equal(secondCustomer.id)
             })
             after('delete second customer', async () => {
                 await request.patch(`/estimates/${estimateLocal.id}`)
-                    .send({ "customer_id": firstCustomerId })
+                    .send({ "customer_id": customerLocal.id })
                     .auth(username, password)
-                await request.delete(`/customers/${secondCustomer.customer_id}`)
+                    .expect(200)
+                await request.delete(`/customers/${secondCustomer.id}`)
+                    .expect(200)
             })
 
         })
@@ -285,7 +268,7 @@ describe('estimates', async () => {
                 .auth(username, password)
                 .expect(200)
 
-            await request.delete(`/job_sites/${estimateLocal.site_id}`)
+            await request.delete(`/sites/${estimateLocal.site_id}`)
                 .auth(username, password)
                 .expect(200)
 
@@ -300,18 +283,18 @@ describe('estimates', async () => {
         before('create customer, job site, estimate', async () => {
             let customerLocal = { ...customer }
             customerLocal.create_job_site = true
-            let personResponse = await request.post('/customers')
+            let customerResponse = await request.post('/customers')
                 .send(customerLocal)
                 .auth(username, password)
                 .expect(201)
-            estimateLocal.customer_id = personResponse.body.customer_id
-            estimateLocal.site_id = personResponse.body.site_id
+            estimateLocal.customer_id = customerResponse.body.id
+            estimateLocal.site_id = customerResponse.body.site_id
 
             let estimateResponse = await request.post('/estimates')
                 .send(estimateLocal)
                 .auth(username, password)
+                .expect(201)
             estimateLocal = estimateResponse.body
-            expect(estimateResponse.status).to.equal(201)
         })
         describe('401', async () => {
             let res
@@ -331,7 +314,7 @@ describe('estimates', async () => {
                 let missing_id = '00000'
                 res = await request.delete(`/estimates/${missing_id}`)
                     .auth(username, password)
-                    .expect(200)
+                    .expect(404)
             })
             it('should satisfy api spec', () => {
                 res.should.satisfyApiSpec
@@ -355,7 +338,7 @@ describe('estimates', async () => {
             await request.delete(`/estimates/${estimateLocal.id}`)
                 .auth(username, password)
                 .expect(404)
-            await request.delete(`/job_sites/${estimateLocal.site_id}`)
+            await request.delete(`/sites/${estimateLocal.site_id}`)
                 .auth(username, password)
                 .expect(200)
             await request.delete(`/customers/${estimateLocal.customer_id}`)

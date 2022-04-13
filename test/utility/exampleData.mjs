@@ -65,7 +65,7 @@ export let order = {
     "status_code": "100",
 }
 
-export let job_site = {
+export let site = {
     "owner": "adminuser",
     "address_ext": "",
     "address": "747 E 32nd Ave, #410",
