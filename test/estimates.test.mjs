@@ -16,7 +16,6 @@ let baseURL = process.env.MODI_BASEURL
 let request = supertest(baseURL)
 
 // Sets the location of your OpenAPI Specification file
-// res.should.satisfyApiSpec
 chai.use(chaiResponseValidator.default(path.join(__dirname, '/spec/swagger.yaml')))
 
 describe('estimates', async () => {

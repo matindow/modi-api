@@ -1,5 +1,4 @@
 import { customer, address } from './utility/exampleData.mjs'
-import { randomString } from './utility/utlity.mjs'
 import chai from 'chai';
 const { assert, expect } = chai
 chai.should()
@@ -7,7 +6,6 @@ import 'dotenv/config'
 import supertest from 'supertest';
 import * as path from 'path';
 import chaiResponseValidator from 'chai-openapi-response-validator';
-import { chaiPlugin as matchApiSchema } from 'api-contract-validator'
 
 const __dirname = path.resolve();
 
@@ -17,15 +15,8 @@ let baseURL = process.env.MODI_BASEURL
 
 let request = supertest(baseURL)
 
-const apiDefinitionsPath = path.join(__dirname, '/spec/swagger.yaml')
-
-
 // Sets the location of your OpenAPI Specification file
-// res.should.satisfyApiSpec
 chai.use(chaiResponseValidator.default(path.join(__dirname, '/spec/swagger.yaml')))
-
-// res.should.satisfyApiSpec
-// chai.use(matchApiSchema({ apiDefinitionsPath, reportCoverage: true, exportCoverage: true }))
 
 describe('addresses', async () => {
 
