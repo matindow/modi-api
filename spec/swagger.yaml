@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   description: |
-   MODI api
+    MODI api
   version: 2-oas3
   title: MODI
 servers:
@@ -20,26 +20,26 @@ paths:
       summary: create order
       operationId: createOrder
       responses:
-        '201':
+        "201":
           description: order created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/order'
-        '400':
+                $ref: "#/components/schemas/order"
+        "400":
           description: Invalid input
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'         
-        '401':
+                $ref: "#/components/schemas/error"
+        "401":
           description: Access Denied
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'          
+                $ref: "#/components/schemas/error"
       requestBody:
-        $ref: '#/components/requestBodies/order'
+        $ref: "#/components/requestBodies/order"
   /orders/{order_id}:
     get:
       tags:
@@ -55,7 +55,7 @@ paths:
           required: true
           schema:
             type: string
-            example: '56070'
+            example: "56070"
         - name: items
           in: query
           description: return with items array
@@ -78,30 +78,30 @@ paths:
             type: boolean
             default: false
       responses:
-        '200':
+        "200":
           description: successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/order'
-        '400':
+                $ref: "#/components/schemas/order"
+        "400":
           description: Invalid ID supplied
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'         
-        '401':
+                $ref: "#/components/schemas/error"
+        "401":
           description: Access Denied
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'          
-        '404':
+                $ref: "#/components/schemas/error"
+        "404":
           description: Order not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'
+                $ref: "#/components/schemas/error"
     patch:
       tags:
         - order
@@ -115,34 +115,34 @@ paths:
           required: true
           schema:
             type: string
-            example: '56070'
+            example: "56070"
       responses:
-        '200':
+        "200":
           description: order updated
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/order'
-        '400':
+                $ref: "#/components/schemas/order"
+        "400":
           description: Invalid ID supplied
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'         
-        '401':
+                $ref: "#/components/schemas/error"
+        "401":
           description: Access Denied
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'          
-        '404':
+                $ref: "#/components/schemas/error"
+        "404":
           description: Order not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'
+                $ref: "#/components/schemas/error"
       requestBody:
-        $ref: '#/components/requestBodies/order'
+        $ref: "#/components/requestBodies/order"
     delete:
       tags:
         - order
@@ -156,28 +156,28 @@ paths:
           required: true
           schema:
             type: string
-            example: '56070'
+            example: "56070"
       responses:
-        '200':
+        "200":
           description: Order Deleted
-        '400':
+        "400":
           description: Invalid ID supplied
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'         
-        '401':
+                $ref: "#/components/schemas/error"
+        "401":
           description: Access Denied
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'          
-        '404':
+                $ref: "#/components/schemas/error"
+        "404":
           description: Order not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'          
+                $ref: "#/components/schemas/error"
   /sites:
     post:
       tags:
@@ -186,26 +186,26 @@ paths:
       summary: create site
       operationId: createSite
       responses:
-        '201':
+        "201":
           description: site created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/site'
-        '400':
+                $ref: "#/components/schemas/site"
+        "400":
           description: Invalid input
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'         
-        '401':
+                $ref: "#/components/schemas/error"
+        "401":
           description: Access Denied
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'          
+                $ref: "#/components/schemas/error"
       requestBody:
-        $ref: '#/components/requestBodies/site'
+        $ref: "#/components/requestBodies/site"
   /sites/{site_id}:
     get:
       tags:
@@ -221,7 +221,7 @@ paths:
           required: true
           schema:
             type: string
-            example: '56070'
+            example: "56070"
         - name: items
           in: query
           description: return with items array
@@ -230,30 +230,30 @@ paths:
             type: boolean
             default: false
       responses:
-        '200':
+        "200":
           description: successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/site'
-        '400':
+                $ref: "#/components/schemas/site"
+        "400":
           description: Invalid ID supplied
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'         
-        '401':
+                $ref: "#/components/schemas/error"
+        "401":
           description: Access Denied
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'          
-        '404':
+                $ref: "#/components/schemas/error"
+        "404":
           description: site not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'
+                $ref: "#/components/schemas/error"
     patch:
       tags:
         - site
@@ -267,34 +267,34 @@ paths:
           required: true
           schema:
             type: string
-            example: '56070'
+            example: "56070"
       responses:
-        '200':
+        "200":
           description: site updated
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/site'
-        '400':
+                $ref: "#/components/schemas/site"
+        "400":
           description: Invalid ID supplied
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'         
-        '401':
+                $ref: "#/components/schemas/error"
+        "401":
           description: Access Denied
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'          
-        '404':
+                $ref: "#/components/schemas/error"
+        "404":
           description: site not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'
+                $ref: "#/components/schemas/error"
       requestBody:
-        $ref: '#/components/requestBodies/site'
+        $ref: "#/components/requestBodies/site"
     delete:
       tags:
         - site
@@ -308,28 +308,28 @@ paths:
           required: true
           schema:
             type: string
-            example: '56070'
+            example: "56070"
       responses:
-        '200':
+        "200":
           description: site deleted
-        '400':
+        "400":
           description: Invalid ID supplied
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'         
-        '401':
+                $ref: "#/components/schemas/error"
+        "401":
           description: Access Denied
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'          
-        '404':
+                $ref: "#/components/schemas/error"
+        "404":
           description: Order not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'  
+                $ref: "#/components/schemas/error"
   /addresses:
     post:
       tags:
@@ -338,26 +338,26 @@ paths:
       summary: create address
       operationId: createAddress
       responses:
-        '201':
+        "201":
           description: address created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/address'
-        '400':
+                $ref: "#/components/schemas/address"
+        "400":
           description: Invalid input
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'         
-        '401':
+                $ref: "#/components/schemas/error"
+        "401":
           description: Access Denied
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'          
+                $ref: "#/components/schemas/error"
       requestBody:
-        $ref: '#/components/requestBodies/address'
+        $ref: "#/components/requestBodies/address"
   /addresses/{address_id}:
     get:
       tags:
@@ -373,32 +373,32 @@ paths:
           required: true
           schema:
             type: string
-            example: '56070'
+            example: "56070"
       responses:
-        '200':
+        "200":
           description: successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/address'
-        '400':
+                $ref: "#/components/schemas/address"
+        "400":
           description: Invalid ID supplied
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'         
-        '401':
+                $ref: "#/components/schemas/error"
+        "401":
           description: Access Denied
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'          
-        '404':
+                $ref: "#/components/schemas/error"
+        "404":
           description: site not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'
+                $ref: "#/components/schemas/error"
     patch:
       tags:
         - address
@@ -412,34 +412,34 @@ paths:
           required: true
           schema:
             type: string
-            example: '56070'
+            example: "56070"
       responses:
-        '200':
+        "200":
           description: address updated
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/address'
-        '400':
+                $ref: "#/components/schemas/address"
+        "400":
           description: Invalid ID supplied
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'         
-        '401':
+                $ref: "#/components/schemas/error"
+        "401":
           description: Access Denied
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'          
-        '404':
+                $ref: "#/components/schemas/error"
+        "404":
           description: site not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'
+                $ref: "#/components/schemas/error"
       requestBody:
-        $ref: '#/components/requestBodies/site'
+        $ref: "#/components/requestBodies/site"
     delete:
       tags:
         - site
@@ -453,28 +453,28 @@ paths:
           required: true
           schema:
             type: string
-            example: '56070'
+            example: "56070"
       responses:
-        '200':
+        "200":
           description: address deleted
-        '400':
+        "400":
           description: Invalid ID supplied
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'         
-        '401':
+                $ref: "#/components/schemas/error"
+        "401":
           description: Access Denied
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'          
-        '404':
+                $ref: "#/components/schemas/error"
+        "404":
           description: Order not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'  
+                $ref: "#/components/schemas/error"
   /estimates:
     post:
       tags:
@@ -483,26 +483,26 @@ paths:
       summary: create estimate
       operationId: createEstimate
       responses:
-        '201':
+        "201":
           description: successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/estimate'      
-        '400':
+                $ref: "#/components/schemas/estimate"
+        "400":
           description: Invalid input
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'         
-        '401':
+                $ref: "#/components/schemas/error"
+        "401":
           description: Access Denied
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'          
+                $ref: "#/components/schemas/error"
       requestBody:
-        $ref: '#/components/requestBodies/estimate'
+        $ref: "#/components/requestBodies/estimate"
   /estimates/{estimate_id}:
     get:
       tags:
@@ -518,7 +518,7 @@ paths:
           required: true
           schema:
             type: string
-            example: '17419'
+            example: "17419"
         - name: items
           in: query
           description: return with items array
@@ -532,32 +532,32 @@ paths:
           required: false
           schema:
             type: boolean
-            default: false        
+            default: false
       responses:
-        '200':
+        "200":
           description: successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/estimate'
-        '400':
+                $ref: "#/components/schemas/estimate"
+        "400":
           description: Invalid ID supplied
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'          
-        '401':
+                $ref: "#/components/schemas/error"
+        "401":
           description: Access Denied
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'          
-        '404':
+                $ref: "#/components/schemas/error"
+        "404":
           description: Estimate not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'          
+                $ref: "#/components/schemas/error"
     patch:
       tags:
         - estimate
@@ -571,34 +571,34 @@ paths:
           required: true
           schema:
             type: string
-            example: '17419'
+            example: "17419"
       responses:
-        '200':
+        "200":
           description: estimate updated
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/estimate'                
-        '400':
+                $ref: "#/components/schemas/estimate"
+        "400":
           description: Invalid ID supplied
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'         
-        '401':
+                $ref: "#/components/schemas/error"
+        "401":
           description: Access Denied
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'          
-        '404':
+                $ref: "#/components/schemas/error"
+        "404":
           description: Estimate not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'          
+                $ref: "#/components/schemas/error"
       requestBody:
-        $ref: '#/components/requestBodies/estimate'
+        $ref: "#/components/requestBodies/estimate"
     delete:
       tags:
         - estimate
@@ -612,28 +612,28 @@ paths:
           required: true
           schema:
             type: string
-            example: '17419'
+            example: "17419"
       responses:
-        '200':
+        "200":
           description: estimate deleted
-        '400':
+        "400":
           description: Invalid ID supplied
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'         
-        '401':
+                $ref: "#/components/schemas/error"
+        "401":
           description: Access Denied
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'          
-        '404':
+                $ref: "#/components/schemas/error"
+        "404":
           description: Estimate not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'          
+                $ref: "#/components/schemas/error"
   /customers:
     post:
       tags:
@@ -642,26 +642,26 @@ paths:
       summary: create customer
       operationId: createCustomer
       responses:
-        '201':
+        "201":
           description: successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/customer'      
-        '400':
+                $ref: "#/components/schemas/customer"
+        "400":
           description: Invalid input
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'         
-        '401':
+                $ref: "#/components/schemas/error"
+        "401":
           description: Access Denied
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'          
+                $ref: "#/components/schemas/error"
       requestBody:
-        $ref: '#/components/requestBodies/customer'
+        $ref: "#/components/requestBodies/customer"
   /customers/{customer_id}:
     get:
       tags:
@@ -677,32 +677,32 @@ paths:
           required: true
           schema:
             type: string
-            example: '94257'
+            example: "94257"
       responses:
-        '200':
+        "200":
           description: successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/customer'
-        '400':
+                $ref: "#/components/schemas/customer"
+        "400":
           description: Invalid ID supplied
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'         
-        '401':
+                $ref: "#/components/schemas/error"
+        "401":
           description: Access Denied
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'          
-        '404':
+                $ref: "#/components/schemas/error"
+        "404":
           description: Customer not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'          
+                $ref: "#/components/schemas/error"
     patch:
       tags:
         - customer
@@ -716,34 +716,34 @@ paths:
           required: true
           schema:
             type: string
-            example: '94257'
+            example: "94257"
       responses:
-        '200':
+        "200":
           description: Customer updated
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/customer'                
-        '400':
+                $ref: "#/components/schemas/customer"
+        "400":
           description: Invalid ID supplied
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'                  
-        '401':
+                $ref: "#/components/schemas/error"
+        "401":
           description: Access Denied
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'          
-        '404':
+                $ref: "#/components/schemas/error"
+        "404":
           description: Customer not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'          
+                $ref: "#/components/schemas/error"
       requestBody:
-        $ref: '#/components/requestBodies/customer'
+        $ref: "#/components/requestBodies/customer"
     delete:
       tags:
         - customer
@@ -757,28 +757,28 @@ paths:
           required: true
           schema:
             type: string
-            example: '17419'
+            example: "17419"
       responses:
-        '200':
+        "200":
           description: Customer deleted
-        '400':
+        "400":
           description: Invalid ID supplied
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'         
-        '401':
+                $ref: "#/components/schemas/error"
+        "401":
           description: Access Denied
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'          
-        '404':
+                $ref: "#/components/schemas/error"
+        "404":
           description: Customer not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'          
+                $ref: "#/components/schemas/error"
   /items:
     post:
       tags:
@@ -787,26 +787,26 @@ paths:
       summary: add new item to order/estimate/site
       operationId: createItem
       responses:
-        '201':
+        "201":
           description: successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/item'           
-        '400':
+                $ref: "#/components/schemas/item"
+        "400":
           description: Invalid input
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'         
-        '401':
+                $ref: "#/components/schemas/error"
+        "401":
           description: Access Denied
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'          
+                $ref: "#/components/schemas/error"
       requestBody:
-        $ref: '#/components/requestBodies/item'
+        $ref: "#/components/requestBodies/item"
   /items/{item_id}:
     get:
       tags:
@@ -822,32 +822,32 @@ paths:
           required: true
           schema:
             type: string
-            example: '803365'
+            example: "803365"
       responses:
-        '200':
+        "200":
           description: successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/item'
-        '400':
+                $ref: "#/components/schemas/item"
+        "400":
           description: Invalid ID supplied
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'         
-        '401':
+                $ref: "#/components/schemas/error"
+        "401":
           description: Access Denied
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'          
-        '404':
+                $ref: "#/components/schemas/error"
+        "404":
           description: item not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'          
+                $ref: "#/components/schemas/error"
     patch:
       tags:
         - item
@@ -861,34 +861,34 @@ paths:
           required: true
           schema:
             type: string
-            example: '56070'
+            example: "56070"
       responses:
-        '200':
+        "200":
           description: item updated
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/item'          
-        '400':
+                $ref: "#/components/schemas/item"
+        "400":
           description: Invalid ID supplied
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'         
-        '401':
+                $ref: "#/components/schemas/error"
+        "401":
           description: Access Denied
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'          
-        '404':
+                $ref: "#/components/schemas/error"
+        "404":
           description: item not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'          
+                $ref: "#/components/schemas/error"
       requestBody:
-        $ref: '#/components/requestBodies/item'
+        $ref: "#/components/requestBodies/item"
     delete:
       tags:
         - item
@@ -902,28 +902,28 @@ paths:
           required: true
           schema:
             type: string
-            example: '56070'
+            example: "56070"
       responses:
-        '200':
+        "200":
           description: item deleted
-        '400':
+        "400":
           description: Invalid ID supplied
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'         
-        '401':
+                $ref: "#/components/schemas/error"
+        "401":
           description: Access Denied
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'          
-        '404':
+                $ref: "#/components/schemas/error"
+        "404":
           description: item not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'          
+                $ref: "#/components/schemas/error"
   /sales_modifiers:
     post:
       tags:
@@ -932,26 +932,26 @@ paths:
       summary: add new sales modifier to order/estimate
       operationId: createSalesModifier
       responses:
-        '201':
+        "201":
           description: successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/sales_modifier'          
-        '400':
+                $ref: "#/components/schemas/sales_modifier"
+        "400":
           description: Invalid input
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'         
-        '401':
+                $ref: "#/components/schemas/error"
+        "401":
           description: Access Denied
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'          
+                $ref: "#/components/schemas/error"
       requestBody:
-        $ref: '#/components/requestBodies/sales_modifier'
+        $ref: "#/components/requestBodies/sales_modifier"
     get:
       tags:
         - sales_modifier
@@ -966,34 +966,34 @@ paths:
           required: false
           schema:
             type: string
-            example: 'DirectSale Disct FB:TAPE20'
+            example: "DirectSale Disct FB:TAPE20"
       responses:
-        '200':
+        "200":
           description: successful operation
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/sales_modifier'
-        '400':
+                  $ref: "#/components/schemas/sales_modifier"
+        "400":
           description: Invalid ID supplied
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'         
-        '401':
+                $ref: "#/components/schemas/error"
+        "401":
           description: Access Denied
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'          
-        '404':
+                $ref: "#/components/schemas/error"
+        "404":
           description: item not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'          
+                $ref: "#/components/schemas/error"
   /sales_modifiers/{sales_modifier_id}:
     get:
       tags:
@@ -1009,32 +1009,32 @@ paths:
           required: true
           schema:
             type: string
-            example: '803365'
+            example: "803365"
       responses:
-        '200':
+        "200":
           description: successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/sales_modifier'
-        '400':
+                $ref: "#/components/schemas/sales_modifier"
+        "400":
           description: Invalid ID supplied
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'         
-        '401':
+                $ref: "#/components/schemas/error"
+        "401":
           description: Access Denied
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'          
-        '404':
+                $ref: "#/components/schemas/error"
+        "404":
           description: sales modifier not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'         
+                $ref: "#/components/schemas/error"
     patch:
       tags:
         - sales_modifier
@@ -1048,28 +1048,28 @@ paths:
           required: true
           schema:
             type: string
-            example: '88660'      
+            example: "88660"
       responses:
-        '201':
+        "201":
           description: successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/sales_modifier'          
-        '400':
+                $ref: "#/components/schemas/sales_modifier"
+        "400":
           description: Invalid input
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'         
-        '401':
+                $ref: "#/components/schemas/error"
+        "401":
           description: Access Denied
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'          
+                $ref: "#/components/schemas/error"
       requestBody:
-        $ref: '#/components/requestBodies/sales_modifier'
+        $ref: "#/components/requestBodies/sales_modifier"
     delete:
       tags:
         - sales_modifier
@@ -1083,28 +1083,28 @@ paths:
           required: true
           schema:
             type: string
-            example: '88660'
+            example: "88660"
       responses:
-        '200':
+        "200":
           description: sales modifier deleted
-        '400':
+        "400":
           description: Invalid ID supplied
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'         
-        '401':
+                $ref: "#/components/schemas/error"
+        "401":
           description: Access Denied
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'          
-        '404':
+                $ref: "#/components/schemas/error"
+        "404":
           description: sales modifier not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'         
+                $ref: "#/components/schemas/error"
   /payments:
     post:
       tags:
@@ -1113,26 +1113,26 @@ paths:
       summary: add new payment to order
       operationId: createPayment
       responses:
-        '201':
+        "201":
           description: successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/payment'
-        '400':
+                $ref: "#/components/schemas/payment"
+        "400":
           description: Invalid input
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'         
-        '401':
+                $ref: "#/components/schemas/error"
+        "401":
           description: Access Denied
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'          
+                $ref: "#/components/schemas/error"
       requestBody:
-        $ref: '#/components/requestBodies/payment'
+        $ref: "#/components/requestBodies/payment"
   /payments/{payment_id}:
     get:
       tags:
@@ -1147,32 +1147,32 @@ paths:
           required: true
           schema:
             type: string
-            example: '2'
+            example: "2"
       responses:
-        '200':
+        "200":
           description: successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/payment'
-        '400':
+                $ref: "#/components/schemas/payment"
+        "400":
           description: Invalid ID supplied
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'         
-        '401':
+                $ref: "#/components/schemas/error"
+        "401":
           description: Access Denied
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'          
-        '404':
+                $ref: "#/components/schemas/error"
+        "404":
           description: payment not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'  
+                $ref: "#/components/schemas/error"
     patch:
       tags:
         - payments
@@ -1186,34 +1186,34 @@ paths:
           required: true
           schema:
             type: string
-            example: '2'
+            example: "2"
       responses:
-        '200':
+        "200":
           description: payment updated
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/payment'        
-        '400':
+                $ref: "#/components/schemas/payment"
+        "400":
           description: Invalid ID supplied
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'         
-        '401':
+                $ref: "#/components/schemas/error"
+        "401":
           description: Access Denied
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'          
-        '404':
+                $ref: "#/components/schemas/error"
+        "404":
           description: payment not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'          
+                $ref: "#/components/schemas/error"
       requestBody:
-        $ref: '#/components/requestBodies/payment'
+        $ref: "#/components/requestBodies/payment"
     delete:
       tags:
         - payments
@@ -1227,28 +1227,28 @@ paths:
           required: true
           schema:
             type: string
-            example: '2'
+            example: "2"
       responses:
-        '200':
+        "200":
           description: payment deleted
-        '400':
+        "400":
           description: Invalid ID supplied
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'         
-        '401':
+                $ref: "#/components/schemas/error"
+        "401":
           description: Access Denied
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'          
-        '404':
+                $ref: "#/components/schemas/error"
+        "404":
           description: payment not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'          
+                $ref: "#/components/schemas/error"
 components:
   securitySchemes:
     BasicAuth:
@@ -1260,61 +1260,61 @@ components:
       properties:
         error:
           type: string
-          example: 'Order not found'
+          example: "Order not found"
     order:
       type: object
       properties:
         id:
           type: string
-          example: '56057'
+          example: "56057"
         customer_id:
           type: string
-          example: '353'
+          example: "353"
         site_id:
           type: string
-          example: '88678'
+          example: "88678"
         organization_name:
           type: string
-          example: 'Indow HQ'
+          example: "Indow HQ"
         owner:
           type: string
-          example: 'adminuser'
+          example: "adminuser"
         status_code:
           type: string
-          example: '100'
+          example: "100"
         jobsite_pricing:
           type: boolean
           default: false
         items:
           type: array
           items:
-            $ref: '#/components/schemas/item'
+            $ref: "#/components/schemas/item"
         sales_modifiers:
           type: array
           items:
-            $ref: '#/components/schemas/sales_modifier'
+            $ref: "#/components/schemas/sales_modifier"
         payments:
           type: array
           items:
-            $ref: '#/components/schemas/payment'
+            $ref: "#/components/schemas/payment"
     estimate:
       type: object
       properties:
         id:
           type: string
-          example: '1'
+          example: "1"
         customer_id:
           type: string
-          example: '353'
+          example: "353"
         site_id:
           type: string
-          example: '88678'
+          example: "88678"
         organization_name:
           type: string
-          example: 'Indow HQ'
+          example: "Indow HQ"
         owner:
           type: string
-          example: 'adminuser'
+          example: "adminuser"
         estimate_total:
           type: number
           format: double
@@ -1322,57 +1322,57 @@ components:
         items:
           type: array
           items:
-            $ref: '#/components/schemas/item'
+            $ref: "#/components/schemas/item"
         sales_modifiers:
           type: array
           items:
-            $ref: '#/components/schemas/sales_modifier'
+            $ref: "#/components/schemas/sales_modifier"
     item:
       type: object
       properties:
         order_id:
           type: string
-          example: '88673'
+          example: "88673"
         estimate_id:
           type: string
-          example: '88673'
+          example: "88673"
         site_id:
           type: string
-          example: '88673'
+          example: "88673"
         shape:
           type: string
-          example: 'Rectangle'
+          example: "Rectangle"
         room:
           type: string
-          example: 'room1'
+          example: "room1"
         location:
           type: string
-          example: 'loc1'
+          example: "loc1"
         floor:
           type: string
-          example: 'floor1'
+          example: "floor1"
         status:
           type: string
-          example: 'Include'
+          example: "Include"
         product:
           type: string
-          example: 'T3 Insert'
+          example: "T3 Insert"
         product_type:
           type: string
-          example: 'MG'
+          example: "MG"
         tubing:
           type: string
-          example: 'White'
+          example: "White"
         frame_step:
           type: string
-          example: '1'
+          example: "1"
           nullable: true
         frame_depth:
           type: string
-          example: 'Less than 5/8 in.'
+          example: "Less than 5/8 in."
         notes:
           type: string
-          example: 'note'
+          example: "note"
         A:
           type: number
           format: double
@@ -1416,7 +1416,7 @@ components:
         spines:
           type: string
           nullable: true
-          example: 'None'
+          example: "None"
         drafty_window:
           type: boolean
           default: false
@@ -1435,45 +1435,45 @@ components:
           example: 144
         tool_type:
           type: string
-          example: 'laser'
+          example: "laser"
         id:
           type: string
-          example: '803555'
+          example: "803555"
     sales_modifier:
       type: object
       properties:
         id:
           type: string
-          example: '88590'
+          example: "88590"
         order_id:
           type: string
-          example: '1'
+          example: "1"
         estimate_id:
           type: string
-          example: '2'
+          example: "2"
         quantity:
           type: integer
           format: int64
           example: 1
         modifier:
           type: string
-          example: 'dollar'
+          example: "dollar"
         value:
           type: number
           format: double
           example: 100
         modifier_type:
           type: string
-          example: 'fee'
+          example: "fee"
         modifier_type_id:
           type: string
-          example: '8'
+          example: "8"
         description:
           type: string
-          example: 'Grip Strips'
+          example: "Grip Strips"
         code:
           type: string
-          example: 'Direct Sale Disct FB:TAPE20'
+          example: "Direct Sale Disct FB:TAPE20"
         amount:
           type: number
           format: double
@@ -1481,11 +1481,11 @@ components:
         start_date:
           type: string
           format: date-time
-          example: '1969-12-31T16:00:00Z'
+          example: "1969-12-31T16:00:00Z"
         end_date:
           type: string
           format: date-time
-          example: '2099-05-02T00:00:00Z'
+          example: "2099-05-02T00:00:00Z"
         group:
           type: string
           example: "Indow HQ"
@@ -1500,46 +1500,46 @@ components:
       properties:
         order_id:
           type: string
-          example: '1'
+          example: "1"
         payment_received:
           type: string
-          example: '2021-10-22'
+          example: "2021-10-22"
         payment_type:
           type: string
-          example: 'Check (down)'
+          example: "Check (down)"
         payment_amount:
           type: number
           format: double
           example: 200
         id:
           type: string
-          example: '803555'
+          example: "803555"
     customer:
       type: object
       properties:
         crm_id:
           type: string
-          example: '0030L00f00d1v7DXcqtest'
+          example: "0030L00f00d1v7DXcqtest"
         id:
           type: string
-          example: '1'
+          example: "1"
         site_id:
           type: string
-          example: '2'
+          example: "2"
           nullable: true
         estimate_id:
           type: string
-          example: '3'
+          example: "3"
           nullable: true
         first_name:
           type: string
-          example: 'TestFirst'
+          example: "TestFirst"
         last_name:
           type: string
-          example: 'Collerweather'
+          example: "Collerweather"
         email:
           type: string
-          example: 'test@test.com'
+          example: "test@test.com"
         create_job_site:
           type: boolean
           default: false
@@ -1548,32 +1548,32 @@ components:
           default: false
         organization_name:
           type: string
-          example: 'Indow HQ'
+          example: "Indow HQ"
         owner:
           type: string
-          example: 'adminuser'
+          example: "adminuser"
         address:
           type: string
-          example: '504 Branard St.'
+          example: "504 Branard St."
         address_ext:
           type: string
-          example: 'Unit A'
+          example: "Unit A"
         city:
           type: string
-          example: 'Houston'
+          example: "Houston"
         state:
           type: string
-          example: 'TX'
+          example: "TX"
         zipcode:
           type: string
-          example: '77006'
+          example: "77006"
         shipping:
           type: boolean
           default: false
         addresses:
           type: array
           items:
-            $ref: '#/components/schemas/address'
+            $ref: "#/components/schemas/address"
     address:
       type: object
       properties:
@@ -1662,55 +1662,55 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/order'
+            $ref: "#/components/schemas/order"
       description: order
       required: true
     estimate:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/estimate'
+            $ref: "#/components/schemas/estimate"
       description: estimate
       required: true
     customer:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/customer'
+            $ref: "#/components/schemas/customer"
       description: customer
       required: true
     item:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/item'
+            $ref: "#/components/schemas/item"
       description: item
       required: true
     site:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/site'
+            $ref: "#/components/schemas/site"
       description: site
       required: true
     address:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/address'
+            $ref: "#/components/schemas/address"
       description: address
       required: true
     sales_modifier:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/sales_modifier'
+            $ref: "#/components/schemas/sales_modifier"
       description: sales modifier
       required: true
     payment:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/payment'
+            $ref: "#/components/schemas/payment"
       description: payment
       required: true
