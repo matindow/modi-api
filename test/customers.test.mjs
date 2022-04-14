@@ -22,7 +22,7 @@ describe('customers', async () => {
 
     describe('POST', async () => {
         let customerLocal = { ...customer }
-        describe('401', async => {
+        describe('401', async () => {
             let res
             it('should fail without auth', async () => {
                 res = await request.post('/customers')
@@ -33,7 +33,7 @@ describe('customers', async () => {
                 res.should.satisfyApiSpec
             })
         })
-        describe('400', async => {
+        describe('400', async () => {
             let res
             it('should fail with invalid body', async () => {
                 res = await request.post('/customers')
@@ -45,7 +45,7 @@ describe('customers', async () => {
                 res.should.satisfyApiSpec
             })
         })
-        describe('201', async => {
+        describe('201', async () => {
             let res
             it('should create a customer', async () => {
                 res = await request.post('/customers')
@@ -123,7 +123,7 @@ describe('customers', async () => {
         })
     });
 
-    describe('PATCH', async => {
+    describe('PATCH', async () => {
         let customerLocal
         before('create customer', async () => {
             let res = await request.post('/customers')
@@ -196,7 +196,7 @@ describe('customers', async () => {
         })
 
     })
-    describe('DELETE', async => {
+    describe('DELETE', async () => {
         let customerLocal = { ...customer }
         before('create customer', async () => {
             let res = await request.post('/customers')
