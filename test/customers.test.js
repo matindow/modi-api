@@ -4,7 +4,7 @@ import * as path from 'node:path'
 import chai from 'chai'
 import supertest from 'supertest'
 import chaiResponseValidator from 'chai-openapi-response-validator'
-import config from './utility/config.js'
+import config from './env/config.js'
 import { customer } from './utility/exampleData.js'
 
 const { username, password, baseUrl } = config
