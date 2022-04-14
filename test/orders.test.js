@@ -4,8 +4,8 @@ import * as path from 'node:path'
 import chai from 'chai'
 import supertest from 'supertest'
 import chaiResponseValidator from 'chai-openapi-response-validator'
-import config from './utility/config.mjs'
-import { customer, site } from './utility/exampleData.mjs'
+import config from './utility/config.js'
+import { customer, order } from './utility/exampleData.js'
 
 const { username, password, baseUrl } = config
 const { expect } = chai
@@ -16,21 +16,24 @@ chai.should()
 // Sets the location of your OpenAPI Specification file
 chai.use(chaiResponseValidator.default(path.join(dirname, '/spec/swagger.yaml')))
 
-describe('sites', async () => {
+describe('orders', async () => {
 	describe('POST', async () => {
-		let siteLocal = { ...site }
-		before('create customer', async () => {
+		let orderLocal = { ...order }
+		before('create customer, jobsite', async () => {
+			const customerLocal = { ...customer }
+			customerLocal.create_job_site = true
 			const customerResponse = await request.post('/customers')
-				.send(customer)
+				.send(customerLocal)
 				.auth(username, password)
 				.expect(201)
-			siteLocal.customer_id = customerResponse.body.id
+			orderLocal.customer_id = customerResponse.body.id
+			orderLocal.site_id = customerResponse.body.site_id
 		})
 		describe('401', async () => {
 			let response
 			it('should fail without auth', async () => {
-				response = await request.post('/sites')
-					.send(siteLocal)
+				response = await request.post('/orders')
+					.send(orderLocal)
 					.expect(401)
 			})
 			it('should satisfy api spec', () => {
@@ -40,7 +43,7 @@ describe('sites', async () => {
 		describe('400', async () => {
 			let response
 			it('should fail with invalid body', async () => {
-				response = await request.post('/sites')
+				response = await request.post('/orders')
 					.send({ invalid: 'invalid' })
 					.auth(username, password)
 					.expect(400)
@@ -51,55 +54,58 @@ describe('sites', async () => {
 		})
 		describe('201', async () => {
 			let response
-			it('should create an site', async () => {
-				response = await request.post('/sites')
-					.send(siteLocal)
+			it('should create an order', async () => {
+				response = await request.post('/orders')
+					.send(orderLocal)
 					.auth(username, password)
 					.expect(201)
-				siteLocal = response.body
+				orderLocal = response.body
 			})
 			it('should satisfy api spec', () => {
 				response.should.satisfyApiSpec
 			})
-			it('should actually have created a site', async () => {
-				response = await request.get(`/sites/${siteLocal.id}`)
-					.auth(username, password)
-					.expect(200)
-			})
 		})
 
-		after('delete site, customer', async () => {
-			await request.delete(`/sites/${siteLocal.id}`)
+		after('delete order, customer, jobsite', async () => {
+			await request.delete(`/orders/${orderLocal.id}`)
 				.auth(username, password)
 				.expect(200)
 
-			await request.delete(`/customers/${siteLocal.customer_id}`)
+			await request.delete(`/sites/${orderLocal.site_id}`)
+				.auth(username, password)
+				.expect(200)
+
+			await request.delete(`/customers/${orderLocal.customer_id}`)
 				.auth(username, password)
 				.expect(200)
 		})
 	})
 
 	describe('GET', async () => {
-		let siteLocal = { ...site }
-		before('create customer, job site', async () => {
+		let orderLocal = { ...order }
+		before('create customer, job site, order', async () => {
+			const customerLocal = { ...customer }
+			customerLocal.create_job_site = true
+
 			const customerResponse = await request.post('/customers')
-				.send(customer)
+				.send(customerLocal)
 				.auth(username, password)
 				.expect(201)
 
 			// add required object references to example data before create
-			siteLocal.customer_id = customerResponse.body.id
+			orderLocal.customer_id = customerResponse.body.id
+			orderLocal.site_id = customerResponse.body.site_id
 
-			const siteResponse = await request.post('/sites')
-				.send(siteLocal)
+			const orderResponse = await request.post('/orders')
+				.send(orderLocal)
 				.auth(username, password)
 				.expect(201)
-			siteLocal = siteResponse.body
+			orderLocal = orderResponse.body
 		})
 		describe('401', async () => {
 			let response
 			it('should fail without auth', async () => {
-				response = await request.get(`/sites/${siteLocal.id}`)
+				response = await request.get(`/orders/${orderLocal.id}`)
 					.expect(401)
 			})
 			it('should satisfy api spec', () => {
@@ -108,9 +114,9 @@ describe('sites', async () => {
 		})
 		describe('404', async () => {
 			let response
-			it('should fail to get missing site', async () => {
+			it('should fail to get missing order', async () => {
 				const missingId = '00000'
-				response = await request.get(`/sites/${missingId}`)
+				response = await request.get(`/orders/${missingId}`)
 					.auth(username, password)
 					.expect(404)
 			})
@@ -121,52 +127,56 @@ describe('sites', async () => {
 
 		describe('200', async () => {
 			let response
-			it('should get a site', async () => {
-				response = await request.get(`/sites/${siteLocal.id}`)
+			it('should get an order', async () => {
+				response = await request.get(`/orders/${orderLocal.id}`)
 					.auth(username, password)
 					.expect(200)
-
-				// update local reference with successful response body
-				siteLocal = response.body
 			})
 			it('should satisfy api spec', () => {
 				response.should.satisfyApiSpec
 			})
 		})
 
-		after('delete site, customer', async () => {
-			await request.delete(`/sites/${siteLocal.id}`)
+		after('delete order, customer', async () => {
+			await request.delete(`/orders/${orderLocal.id}`)
 				.auth(username, password)
 				.expect(200)
 
-			await request.delete(`/customers/${siteLocal.customer_id}`)
+			await request.delete(`/sites/${orderLocal.site_id}`)
+				.auth(username, password)
+				.expect(200)
+
+			await request.delete(`/customers/${orderLocal.customer_id}`)
 				.auth(username, password)
 				.expect(200)
 		})
 	})
 
 	describe('PATCH', async () => {
-		let siteLocal = { ...site }
-		before('create customer, job site, site', async () => {
+		let orderLocal = { ...order }
+		before('create customer, job site, order', async () => {
+			const customerLocal = { ...customer }
+			customerLocal.create_job_site = true
 			const customerResponse = await request.post('/customers')
-				.send(customer)
+				.send(customerLocal)
 				.auth(username, password)
 				.expect(201)
 
 			// add required object references to example data before create
-			siteLocal.customer_id = customerResponse.body.id
+			orderLocal.customer_id = customerResponse.body.id
+			orderLocal.site_id = customerResponse.body.site_id
 
-			const siteResponse = await request.post('/sites')
-				.send(siteLocal)
+			const orderResponse = await request.post('/orders')
+				.send(orderLocal)
 				.auth(username, password)
 				.expect(201)
-			siteLocal = siteResponse.body
+			orderLocal = orderResponse.body
 		})
 		describe('401', async () => {
 			let response
 			it('should fail without auth', async () => {
-				response = await request.patch(`/sites/${siteLocal.id}`)
-					.send(siteLocal)
+				response = await request.patch(`/orders/${orderLocal.id}`)
+					.send(orderLocal)
 					.expect(401)
 			})
 			it('should satisfy api spec', () => {
@@ -176,10 +186,10 @@ describe('sites', async () => {
 		describe('400', async () => {
 			let response
 			it('should fail with invalid body', async () => {
-				response = await request.patch(`/sites/${siteLocal.id}`)
+				response = await request.patch(`/orders/${orderLocal.id}`)
 					.send({ invalid: 'invalid' })
 					.auth(username, password)
-				expect(response.status).to.equal(400)
+					.expect(400)
 			})
 			it('should satisfy api spec', () => {
 				response.should.satisfyApiSpec
@@ -187,12 +197,12 @@ describe('sites', async () => {
 		})
 		describe('404', async () => {
 			let response
-			it('should fail to update missing site body', async () => {
+			it('should fail to update missing order body', async () => {
 				const missingId = '00000'
-				response = await request.patch(`/sites/${missingId}`)
-					.send(siteLocal)
+				response = await request.patch(`/orders/${missingId}`)
+					.send(orderLocal)
 					.auth(username, password)
-				expect(response.status).to.equal(404)
+					.expect(404)
 			})
 			it('should satisfy api spec', () => {
 				response.should.satisfyApiSpec
@@ -200,53 +210,60 @@ describe('sites', async () => {
 		})
 		describe('200', async () => {
 			let response
-			it('should update an site', async () => {
-				response = await request.patch(`/sites/${siteLocal.id}`)
-					.send({ project_name: 'updated' })
+			it('should update an order', async () => {
+				response = await request.patch(`/orders/${orderLocal.id}`)
+					.send({ status_code: '200' })
 					.auth(username, password)
 					.expect(200)
 			})
 			it('should satisfy api spec', () => {
 				response.should.satisfyApiSpec
 			})
-			it('should actually update customer_id', async () => {
-				response = await request.get(`/sites/${siteLocal.id}`)
+			it('should actually update order', async () => {
+				response = await request.get(`/orders/${orderLocal.id}`)
 					.auth(username, password)
 					.expect(200)
-				expect(response.body.project_name).to.equal('updated')
+				expect(response.body.status_code).to.equal('200')
 			})
 		})
 
-		after('delete site, customer', async () => {
-			await request.delete(`/sites/${siteLocal.id}`)
+		after('delete order, customer', async () => {
+			await request.delete(`/orders/${orderLocal.id}`)
 				.auth(username, password)
 				.expect(200)
 
-			await request.delete(`/customers/${siteLocal.customer_id}`)
+			await request.delete(`/sites/${orderLocal.site_id}`)
+				.auth(username, password)
+				.expect(200)
+
+			await request.delete(`/customers/${orderLocal.customer_id}`)
 				.auth(username, password)
 				.expect(200)
 		})
 	})
 
 	describe('DELETE', async () => {
-		let siteLocal = { ...site }
-		before('create customer, site', async () => {
+		let orderLocal = { ...order }
+		before('create customer, job site, order', async () => {
+			const customerLocal = { ...customer }
+			customerLocal.create_job_site = true
 			const customerResponse = await request.post('/customers')
-				.send(customer)
+				.send(customerLocal)
 				.auth(username, password)
 				.expect(201)
-			siteLocal.customer_id = customerResponse.body.id
+			orderLocal.customer_id = customerResponse.body.id
+			orderLocal.site_id = customerResponse.body.site_id
 
-			const siteResponse = await request.post('/sites')
-				.send(siteLocal)
+			const orderResponse = await request.post('/orders')
+				.send(orderLocal)
 				.auth(username, password)
 				.expect(201)
-			siteLocal = siteResponse.body
+			orderLocal = orderResponse.body
 		})
 		describe('401', async () => {
 			let response
 			it('should fail without auth', async () => {
-				response = await request.delete(`/sites/${siteLocal.id}`)
+				response = await request.delete(`/orders/${orderLocal.id}`)
 					.expect(401)
 			})
 			it('should satisfy api spec', () => {
@@ -255,11 +272,11 @@ describe('sites', async () => {
 		})
 		describe('404', async () => {
 			let response
-			it('should fail to delete a missing site', async () => {
+			it('should fail to delete a missing order', async () => {
 				const missingId = '00000'
-				response = await request.delete(`/sites/${missingId}`)
+				response = await request.delete(`/orders/${missingId}`)
 					.auth(username, password)
-					.expect(200)
+					.expect(404)
 			})
 			it('should satisfy api spec', () => {
 				response.should.satisfyApiSpec
@@ -267,8 +284,8 @@ describe('sites', async () => {
 		})
 		describe('200', async () => {
 			let response
-			it('should delete an site', async () => {
-				response = await request.delete(`/sites/${siteLocal.id}`)
+			it('should delete an order', async () => {
+				response = await request.delete(`/orders/${orderLocal.id}`)
 					.auth(username, password)
 					.expect(200)
 			})
@@ -277,11 +294,14 @@ describe('sites', async () => {
 			})
 		})
 
-		after('delete site, customer', async () => {
-			await request.delete(`/sites/${siteLocal.id}`)
+		after('delete order, customer', async () => {
+			await request.delete(`/orders/${orderLocal.id}`)
 				.auth(username, password)
 				.expect(404)
-			await request.delete(`/customers/${siteLocal.customer_id}`)
+			await request.delete(`/sites/${orderLocal.site_id}`)
+				.auth(username, password)
+				.expect(200)
+			await request.delete(`/customers/${orderLocal.customer_id}`)
 				.auth(username, password)
 				.expect(200)
 		})

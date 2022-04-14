@@ -4,8 +4,8 @@ import * as path from 'node:path'
 import chai from 'chai'
 import supertest from 'supertest'
 import chaiResponseValidator from 'chai-openapi-response-validator'
-import config from './utility/config.mjs'
-import { customer, order, item } from './utility/exampleData.mjs'
+import config from './utility/config.js'
+import { customer, order, item } from './utility/exampleData.js'
 
 const { username, password, baseUrl } = config
 const { expect } = chai
