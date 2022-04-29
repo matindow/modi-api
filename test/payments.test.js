@@ -34,7 +34,7 @@ describe('payments', async () => {
 				.send(orderLocal)
 				.auth(username, password)
 				.expect(201)
-			paymentLocal.order_id = orderResponse.id
+			paymentLocal.order_id = orderResponse.body.id
 		})
 		describe('401', async () => {
 			let response
@@ -81,6 +81,7 @@ describe('payments', async () => {
 			})
 			after('delete payment', async () => {
 				await request.delete(`/payments/${paymentLocal.id}`)
+					.auth(username, password)
 					.expect(200)
 			})
 		})
