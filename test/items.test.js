@@ -35,6 +35,7 @@ describe('items', async () => {
 				.auth(username, password)
 				.expect(201)
 			orderLocal = orderResponse.body
+			orderLocal.estimate_id = customerResponse.body.estimate_id
 		})
 		describe('401', async () => {
 			let response
@@ -62,9 +63,9 @@ describe('items', async () => {
 		describe('201', async () => {
 			describe('order', async () => {
 				const itemLocal = { ...item }
-				itemLocal.order_id = orderLocal.id
 				let itemResponse
 				it('should create an item', async () => {
+					itemLocal.order_id = orderLocal.id
 					itemResponse = await request.post('/items')
 						.send(itemLocal)
 						.auth(username, password)
@@ -74,7 +75,9 @@ describe('items', async () => {
 					itemResponse.should.satisfyApiSpec
 				})
 				it('should be visible on the order', async () => {
-					const orderResponse = await request.get(`/orders/${orderLocal.id}`)
+					const orderResponse = await request
+						.get(`/orders/${orderLocal.id}`)
+						.query({ items: true })
 						.auth(username, password)
 						.expect(200)
 					expect(orderResponse.body.items.length).to.equal(1)
@@ -86,9 +89,9 @@ describe('items', async () => {
 			})
 			describe('estimate', async () => {
 				const itemLocal = { ...item }
-				itemLocal.estimate_id = orderLocal.estimate_id
 				let itemResponse
 				it('should create an item', async () => {
+					itemLocal.estimate_id = orderLocal.estimate_id
 					itemResponse = await request.post('/items')
 						.send(itemLocal)
 						.auth(username, password)
@@ -99,6 +102,7 @@ describe('items', async () => {
 				})
 				it('should be visible on the estimate', async () => {
 					const estimateResponse = await request.get(`/estimates/${orderLocal.estimate_id}`)
+						.query({ items: true })
 						.auth(username, password)
 						.expect(200)
 					expect(estimateResponse.body.items.length).to.equal(1)
@@ -110,9 +114,9 @@ describe('items', async () => {
 			})
 			describe('site', async () => {
 				const itemLocal = { ...item }
-				itemLocal.site_id = orderLocal.site_id
 				let itemResponse
 				it('should create an item', async () => {
+					itemLocal.site_id = orderLocal.site_id
 					itemResponse = await request.post('/items')
 						.send(itemLocal)
 						.auth(username, password)
@@ -123,6 +127,7 @@ describe('items', async () => {
 				})
 				it('should be visible on the site', async () => {
 					const siteResponse = await request.get(`/sites/${orderLocal.site_id}`)
+						.query({ items: true })
 						.auth(username, password)
 						.expect(200)
 					expect(siteResponse.body.items.length).to.equal(1)
@@ -158,6 +163,7 @@ describe('items', async () => {
 		const customerLocal = { ...customer }
 		before('create customer, job site', async () => {
 			customerLocal.create_job_site = true
+			customerLocal.create_estimate = true
 
 			const customerResponse = await request.post('/customers')
 				.send(customerLocal)
@@ -165,7 +171,7 @@ describe('items', async () => {
 				.expect(201)
 
 			// Add required object references to example data before create
-			itemLocal.site_id = customerResponse.body.site_id
+			itemLocal.estimate_id = customerResponse.body.estimate_id
 
 			const itemResponse = await request.post('/items')
 				.send(itemLocal)
@@ -208,12 +214,16 @@ describe('items', async () => {
 			})
 		})
 
-		after('delete item, job_site, customer', async () => {
+		after('delete item, estimate, customer', async () => {
 			await request.delete(`/items/${itemLocal.id}`)
 				.auth(username, password)
 				.expect(200)
 
-			await request.delete(`/sites/${itemLocal.site_id}`)
+			await request.delete(`/estimates/${customerLocal.estimate_id}`)
+				.auth(username, password)
+				.expect(200)
+
+			await request.delete(`/sites/${customerLocal.site_id}`)
 				.auth(username, password)
 				.expect(200)
 
@@ -236,7 +246,7 @@ describe('items', async () => {
 				.expect(201)
 
 			// Add required object references to example data before create
-			itemLocal.site_id = customerResponse.body.site_id
+			itemLocal.estimate_id = customerResponse.body.estimate_id
 			customerLocal = customerResponse.body
 
 			const itemResponse = await request.post('/items')
@@ -285,7 +295,7 @@ describe('items', async () => {
 			let response
 			it('should update an item', async () => {
 				response = await request.patch(`/items/${itemLocal.id}`)
-					.send({ estimate_id: customerLocal.estimate_id, site_id: '' })
+					.send({ room: 'updated' })
 					.auth(username, password)
 					.expect(200)
 			})
@@ -296,7 +306,7 @@ describe('items', async () => {
 				response = await request.get(`/items/${itemLocal.id}`)
 					.auth(username, password)
 					.expect(200)
-				expect(response.body.estimate_id).to.equal(customerLocal.estimate_id)
+				expect(response.body.room).to.equal('updated')
 			})
 		})
 
@@ -323,6 +333,7 @@ describe('items', async () => {
 		let customerLocal = { ...customer }
 		before('create customer, job site', async () => {
 			customerLocal.create_job_site = true
+			customerLocal.create_estimate = true
 
 			const customerResponse = await request.post('/customers')
 				.send(customerLocal)
@@ -330,7 +341,7 @@ describe('items', async () => {
 				.expect(201)
 
 			// Add required object references to example data before create
-			itemLocal.site_id = customerResponse.body.site_id
+			itemLocal.estimate_id = customerResponse.body.estimate_id
 			customerLocal = customerResponse.body
 
 			const itemResponse = await request.post('/items')
@@ -375,12 +386,16 @@ describe('items', async () => {
 			})
 		})
 
-		after('delete job_site, item, customer', async () => {
+		after('delete estimtae, job_site, item, customer', async () => {
 			await request.delete(`/items/${itemLocal.id}`)
 				.auth(username, password)
 				.expect(404)
 
 			await request.delete(`/sites/${customerLocal.site_id}`)
+				.auth(username, password)
+				.expect(200)
+
+			await request.delete(`/estimates/${customerLocal.estimate_id}`)
 				.auth(username, password)
 				.expect(200)
 

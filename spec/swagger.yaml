@@ -1333,12 +1333,15 @@ components:
         order_id:
           type: string
           example: "88673"
+          nullable: true
         estimate_id:
           type: string
           example: "88673"
+          nullable: true
         site_id:
           type: string
           example: "88673"
+          nullable: true
         shape:
           type: string
           example: "Rectangle"
@@ -1351,9 +1354,11 @@ components:
         floor:
           type: string
           example: "floor1"
+          nullable: true
         status:
           type: string
           example: "Include"
+          nullable: true
         product:
           type: string
           example: "T3 Insert"
@@ -1370,9 +1375,11 @@ components:
         frame_depth:
           type: string
           example: "Less than 5/8 in."
+          nullable: true
         notes:
           type: string
           example: "note"
+          nullable: true
         A:
           type: number
           format: double
@@ -1436,6 +1443,7 @@ components:
         tool_type:
           type: string
           example: "laser"
+          nullable: true
         id:
           type: string
           example: "803555"
@@ -1491,6 +1499,7 @@ components:
         crm_id:
           type: string
           example: "0030L00f00d1v7DXcqtest"
+          nullable: true
         id:
           type: string
           example: "1"
