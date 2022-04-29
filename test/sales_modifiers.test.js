@@ -84,6 +84,7 @@ describe('sales_modifiers', async () => {
 			})
 			after('delete sales_modifier', async () => {
 				await request.delete(`/sales_modifiers/${response.body.id}`)
+					.auth(username, password)
 					.expect(200)
 			})
 		})
