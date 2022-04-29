@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   description: |
     MODI api
-  version: 2-oas3
+  version: 2-oas5
   title: MODI
 servers:
   - url: https://indowsandbox.com/sfapi/v1
@@ -1462,39 +1462,10 @@ components:
           type: number
           format: double
           example: 100
-        modifier_type:
-          type: string
-          example: "fee"
-        modifier_type_id:
-          type: string
-          example: "8"
-        description:
-          type: string
-          example: "Grip Strips"
-        code:
-          type: string
-          example: "Direct Sale Disct FB:TAPE20"
         amount:
           type: number
           format: double
           example: 1
-        start_date:
-          type: string
-          format: date-time
-          example: "1969-12-31T16:00:00Z"
-        end_date:
-          type: string
-          format: date-time
-          example: "2099-05-02T00:00:00Z"
-        group:
-          type: string
-          example: "Indow HQ"
-        is_active:
-          type: boolean
-          default: false
-        is_calculate_tax:
-          type: boolean
-          default: false
     payment:
       type: object
       properties:
@@ -1583,9 +1554,6 @@ components:
         customer_id:
           type: string
           example: "94257"
-        address_type:
-          type: string
-          example: "shipping"
         address:
           type: string
           example: "504 Branard St."
