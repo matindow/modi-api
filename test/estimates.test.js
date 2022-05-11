@@ -219,7 +219,7 @@ describe('estimates', async () => {
 			before('create second customer', async () => {
 				secondCustomer = { ...customer }
 				const customerResponse = await request.post('/customers')
-					.send(customerLocal)
+					.send(secondCustomer)
 					.auth(username, password)
 					.expect(201)
 				secondCustomer = customerResponse.body
@@ -245,6 +245,7 @@ describe('estimates', async () => {
 					.auth(username, password)
 					.expect(200)
 				await request.delete(`/customers/${secondCustomer.id}`)
+					.auth(username, password)
 					.expect(200)
 			})
 		})
