@@ -17,7 +17,7 @@ chai.should()
 chai.use(chaiResponseValidator.default(path.join(dirname, '/spec/swagger.yaml')))
 
 describe('payments', async () => {
-	describe.only('POST', async () => {
+	describe('POST', async () => {
 		let orderLocal = { ...order }
 		let paymentLocal = { ...payment }
 		before('create customer, jobsite', async () => {
