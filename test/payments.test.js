@@ -17,8 +17,8 @@ chai.should()
 chai.use(chaiResponseValidator.default(path.join(dirname, '/spec/swagger.yaml')))
 
 describe('payments', async () => {
-	describe('POST', async () => {
-		const orderLocal = { ...order }
+	describe.only('POST', async () => {
+		let orderLocal = { ...order }
 		let paymentLocal = { ...payment }
 		before('create customer, jobsite', async () => {
 			const customerLocal = { ...customer }
@@ -34,6 +34,7 @@ describe('payments', async () => {
 				.send(orderLocal)
 				.auth(username, password)
 				.expect(201)
+			orderLocal = orderResponse.body
 			paymentLocal.order_id = orderResponse.body.id
 		})
 		describe('401', async () => {
