@@ -1035,41 +1035,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/error"
-    patch:
-      tags:
-        - sales_modifier
-        - post
-      summary: update existing sales modifier
-      operationId: updateSalesModifier
-      parameters:
-        - name: sales_modifier_id
-          in: path
-          description: ID of sales modifier to update
-          required: true
-          schema:
-            type: string
-            example: "88660"
-      responses:
-        "201":
-          description: successful operation
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/sales_modifier"
-        "400":
-          description: Invalid input
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/error"
-        "401":
-          description: Access Denied
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/error"
-      requestBody:
-        $ref: "#/components/requestBodies/sales_modifier"
     delete:
       tags:
         - sales_modifier
