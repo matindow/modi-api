@@ -160,7 +160,7 @@ describe('items', async () => {
 
 	describe('GET', async () => {
 		let itemLocal = { ...item }
-		const customerLocal = { ...customer }
+		let customerLocal = { ...customer }
 		before('create customer, job site', async () => {
 			customerLocal.create_job_site = true
 			customerLocal.create_estimate = true
@@ -171,6 +171,7 @@ describe('items', async () => {
 				.expect(201)
 
 			// Add required object references to example data before create
+			customerLocal = customerResponse.body
 			itemLocal.estimate_id = customerResponse.body.estimate_id
 
 			const itemResponse = await request.post('/items')
