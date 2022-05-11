@@ -3,7 +3,6 @@ export const customer = {
 	first_name: 'TestFirst',
 	last_name: 'Collerweather',
 	email: 'test@test.com',
-	zip: '11803',
 	create_job_site: false,
 	create_estimate: false,
 	organization_name: 'Indow HQ',
