@@ -259,7 +259,7 @@ describe('sites', async () => {
 				const missingId = '00000'
 				response = await request.delete(`/sites/${missingId}`)
 					.auth(username, password)
-					.expect(200)
+					.expect(404)
 			})
 			it('should satisfy api spec', () => {
 				response.should.satisfyApiSpec
