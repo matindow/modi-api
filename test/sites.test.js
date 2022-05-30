@@ -185,12 +185,17 @@ describe('sites', async () => {
 				response.should.satisfyApiSpec
 			})
 		})
+		/**
+		 * PATCH call body cannot contain resource ID.
+		 */
 		describe('404', async () => {
 			let response
 			it('should fail to update missing site body', async () => {
 				const missingId = '00000'
+				const siteWithoutId = { ...siteLocal }
+				delete siteWithoutId.id
 				response = await request.patch(`/sites/${missingId}`)
-					.send(siteLocal)
+					.send(siteWithoutId)
 					.auth(username, password)
 				expect(response.status).to.equal(404)
 			})

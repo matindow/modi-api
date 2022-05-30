@@ -239,12 +239,16 @@ describe('payments', async () => {
 				response.should.satisfyApiSpec
 			})
 		})
+
+		/**
+		 * Order ID is not allowed to be updated. Instead, used payment_amount test update operation.
+		 */
 		describe('404', async () => {
 			let response
 			it('should fail to update missing order body', async () => {
 				const missingId = '00000'
 				response = await request.patch(`/payments/${missingId}`)
-					.send(paymentLocal)
+					.send({ payment_amount: 10000 })
 					.auth(username, password)
 					.expect(404)
 			})
