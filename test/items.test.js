@@ -112,6 +112,10 @@ describe('items', async () => {
 					await request.delete(`/items/${itemResponse.body.id}`)
 				})
 			})
+
+			/**
+			 * API is yet to be updated for this operation to be performed.
+			 */
 			describe('site', async () => {
 				const itemLocal = { ...item }
 				let itemResponse
@@ -279,12 +283,17 @@ describe('items', async () => {
 				response.should.satisfyApiSpec
 			})
 		})
+		/**
+		 * estimate_id was sent in this PATCH request.
+		 * We cannot update estimate for an item once associated.
+		 * So we just passed notes to the patch call to upate
+		 */
 		describe('404', async () => {
 			let response
 			it('should fail to update missing order body', async () => {
 				const missingId = '00000'
 				response = await request.patch(`/items/${missingId}`)
-					.send(itemLocal)
+					.send({ notes: 'test patch' })
 					.auth(username, password)
 					.expect(404)
 			})

@@ -195,12 +195,18 @@ describe('orders', async () => {
 				response.should.satisfyApiSpec
 			})
 		})
+
+		/**
+		 * PATCH call body cannot contain resource ID.
+		 */
 		describe('404', async () => {
 			let response
 			it('should fail to update missing order body', async () => {
 				const missingId = '00000'
+				const orderWithoutId = { ...orderLocal }
+				delete orderWithoutId.id
 				response = await request.patch(`/orders/${missingId}`)
-					.send(orderLocal)
+					.send(orderWithoutId)
 					.auth(username, password)
 					.expect(404)
 			})

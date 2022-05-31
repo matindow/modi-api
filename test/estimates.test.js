@@ -201,12 +201,18 @@ describe('estimates', async () => {
 				response.should.satisfyApiSpec
 			})
 		})
+
+		/**
+		 * PATCH request should not contain resource ID as it is being passed in URL
+		 */
 		describe('404', async () => {
 			let response
 			it('should fail to update missing estimate body', async () => {
 				const missingId = '00000'
+				const estimateLocalWithoutId = { ...estimateLocal }
+				delete estimateLocalWithoutId.id
 				response = await request.patch(`/estimates/${missingId}`)
-					.send(estimateLocal)
+					.send(estimateLocalWithoutId)
 					.auth(username, password)
 					.expect(404)
 			})
