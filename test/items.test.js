@@ -115,32 +115,32 @@ describe('items', async () => {
 
 			/**
 			 * API is yet to be updated for this operation to be performed.
-			 */
-			describe('site', async () => {
-				const itemLocal = { ...item }
-				let itemResponse
-				it('should create an item', async () => {
-					itemLocal.site_id = orderLocal.site_id
-					itemResponse = await request.post('/items')
-						.send(itemLocal)
-						.auth(username, password)
-						.expect(201)
-				})
-				it('should satisfy api spec', () => {
-					itemResponse.should.satisfyApiSpec
-				})
-				it('should be visible on the site', async () => {
-					const siteResponse = await request.get(`/sites/${orderLocal.site_id}`)
+			 describe('site', async () => {
+				 const itemLocal = { ...item }
+				 let itemResponse
+				 it('should create an item', async () => {
+					 itemLocal.site_id = orderLocal.site_id
+					 itemResponse = await request.post('/items')
+					 .send(itemLocal)
+					 .auth(username, password)
+					 .expect(201)
+					})
+					it('should satisfy api spec', () => {
+						itemResponse.should.satisfyApiSpec
+					})
+					it('should be visible on the site', async () => {
+						const siteResponse = await request.get(`/sites/${orderLocal.site_id}`)
 						.query({ items: true })
 						.auth(username, password)
 						.expect(200)
-					expect(siteResponse.body.items.length).to.equal(1)
-					expect(siteResponse.body.items[0].id).to.equal(itemResponse.body.id)
+						expect(siteResponse.body.items.length).to.equal(1)
+						expect(siteResponse.body.items[0].id).to.equal(itemResponse.body.id)
+					})
+					after('delete item', async () => {
+						await request.delete(`/items/${itemResponse.body.id}`)
+					})
 				})
-				after('delete item', async () => {
-					await request.delete(`/items/${itemResponse.body.id}`)
-				})
-			})
+			*/
 		})
 
 		after('delete order, jobsite, estimate, customer', async () => {
