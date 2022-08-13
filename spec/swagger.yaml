@@ -1250,6 +1250,52 @@ components:
         jobsite_pricing:
           type: boolean
           default: false
+        estimate_id:
+          type: string
+          example: "145844"
+        price_subtotal:
+          type: number
+          example: 331
+        price_total:
+          type: number
+          example: 357.15
+        tracking_num:
+          type: string
+          example: "799909784"
+        carrier:
+          type: string
+          example: "UPS Freight"
+        ship_method:
+          type: string
+          example: "Ground"
+        ship_hold:
+          type: boolean
+          default: false
+        shipping_notes:
+          type: string
+          example: "Will-Call - Customer will pick up panels when ready"
+        expedite_date:
+          type: string
+          format: date-time
+          example: "2021-11-26T07:20:54Z"
+        commit_date:
+          type: string
+          format: date-time
+          example: "2021-11-26T07:20:54Z"
+        build_date:
+          type: string
+          format: date-time
+          example: "2021-11-26T07:20:54Z"
+        invoice_date:
+          type: string
+          format: date-time
+          example: "2021-11-26T07:20:54Z"
+        wholesale_discount:
+          type: number
+          example: 35
+        shipping_address_id:
+          type: string
+          example: "114175"          
         updated_at:
           type: string
           format: date-time
@@ -1288,6 +1334,12 @@ components:
           type: number
           format: double
           example: 100
+        name:
+          type: string
+          example: "Museum"
+        parent_estimate_id:
+          type: string
+          example: "120955"          
         updated_at:
           type: string
           format: date-time
