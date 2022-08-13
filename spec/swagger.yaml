@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   description: |
     MODI api
-  version: 2-oas5
+  version: 2-oas6
   title: MODI
 servers:
   - url: https://indowsandbox.com/sfapi/v1
@@ -1250,6 +1250,10 @@ components:
         jobsite_pricing:
           type: boolean
           default: false
+        updated_at:
+          type: string
+          format: date-time
+          example: "2021-11-26T07:20:54Z"
         items:
           type: array
           items:
@@ -1284,6 +1288,10 @@ components:
           type: number
           format: double
           example: 100
+        updated_at:
+          type: string
+          format: date-time
+          example: "2021-11-26T07:20:54Z"          
         items:
           type: array
           items:
@@ -1412,6 +1420,10 @@ components:
         id:
           type: string
           example: "803555"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2021-11-26T07:20:54Z"
     sales_modifier:
       type: object
       properties:
@@ -1439,6 +1451,10 @@ components:
           type: number
           format: double
           example: 1
+        updated_at:
+          type: string
+          format: date-time
+          example: "2021-11-26T07:20:54Z"
     payment:
       type: object
       properties:
@@ -1458,6 +1474,10 @@ components:
         id:
           type: string
           example: "803555"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2021-11-26T07:20:54Z"          
     customer:
       type: object
       properties:
@@ -1515,6 +1535,10 @@ components:
         shipping:
           type: boolean
           default: false
+        updated_at:
+          type: string
+          format: date-time
+          example: "2021-11-26T07:20:54Z"
         addresses:
           type: array
           items:
