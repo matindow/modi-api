@@ -661,7 +661,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/error"
       requestBody:
-        $ref: "#/components/requestBodies/customer"
+        $ref: "#/components/requestBodies/customerPost"
   /customers/{customer_id}:
     get:
       tags:
@@ -743,7 +743,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/error"
       requestBody:
-        $ref: "#/components/requestBodies/customer"
+        $ref: "#/components/requestBodies/customerPatch"
     delete:
       tags:
         - customer
@@ -806,7 +806,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/error"
       requestBody:
-        $ref: "#/components/requestBodies/item"
+        $ref: "#/components/requestBodies/itemPost"
   /items/{item_id}:
     get:
       tags:
@@ -888,7 +888,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/error"
       requestBody:
-        $ref: "#/components/requestBodies/item"
+        $ref: "#/components/requestBodies/itemPatch"
     delete:
       tags:
         - item
@@ -1097,7 +1097,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/error"
       requestBody:
-        $ref: "#/components/requestBodies/payment"
+        $ref: "#/components/requestBodies/paymentPost"
   /payments/{payment_id}:
     get:
       tags:
@@ -1178,7 +1178,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/error"
       requestBody:
-        $ref: "#/components/requestBodies/payment"
+        $ref: "#/components/requestBodies/paymentPatch"
     delete:
       tags:
         - payments
@@ -1226,12 +1226,72 @@ components:
         error:
           type: string
           example: "Order not found"
-    order:
+    estimateReadOnly:
       type: object
       properties:
         id:
           type: string
-          example: "56057"
+          example: "1"     
+        estimate_total:
+          type: number
+          format: double
+          example: 100
+        updated_at:
+          type: string
+          format: date-time
+          example: "2021-11-26T07:20:54-08:00"             
+    estimateEditable:
+      type: object
+      properties:
+        customer_id:
+          type: string
+          example: "353"
+        site_id:
+          type: string
+          example: "88678"
+        organization_name:
+          type: string
+          example: "Indow HQ"
+        owner:
+          type: string
+          example: "adminuser"
+        name:
+          type: string
+          example: "Museum"
+        parent_estimate_id:
+          type: string
+          example: "120955"          
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/item"
+        sales_modifiers:
+          type: array
+          items:
+            $ref: "#/components/schemas/sales_modifier"      
+    estimate:
+      allOf:
+        - $ref: "#/components/schemas/estimateReadOnly"
+        - $ref: "#/components/schemas/estimateEditable"
+    orderReadOnly:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "56057"        
+        price_subtotal:
+          type: number
+          example: 331
+        price_total:
+          type: number
+          example: 357.15        
+        updated_at:
+          type: string
+          format: date-time
+          example: "2021-11-26T07:20:54-08:00"               
+    orderEditable:
+      type: object
+      properties:        
         customer_id:
           type: string
           example: "353"
@@ -1252,13 +1312,7 @@ components:
           default: false
         estimate_id:
           type: string
-          example: "145844"
-        price_subtotal:
-          type: number
-          example: 331
-        price_total:
-          type: number
-          example: 357.15
+          example: "145844"        
         tracking_num:
           type: string
           example: "799909784"
@@ -1277,29 +1331,25 @@ components:
         expedite_date:
           type: string
           format: date-time
-          example: "2021-11-26T07:20:54Z"
+          example: "2021-11-26T07:20:54-08:00"
         commit_date:
           type: string
           format: date-time
-          example: "2021-11-26T07:20:54Z"
+          example: "2021-11-26T07:20:54-08:00"
         build_date:
           type: string
           format: date-time
-          example: "2021-11-26T07:20:54Z"
+          example: "2021-11-26T07:20:54-08:00"
         invoice_date:
           type: string
           format: date-time
-          example: "2021-11-26T07:20:54Z"
+          example: "2021-11-26T07:20:54-08:00"
         wholesale_discount:
           type: number
           example: 35
         shipping_address_id:
           type: string
-          example: "114175"          
-        updated_at:
-          type: string
-          format: date-time
-          example: "2021-11-26T07:20:54Z"
+          example: "114175"
         items:
           type: array
           items:
@@ -1311,48 +1361,26 @@ components:
         payments:
           type: array
           items:
-            $ref: "#/components/schemas/payment"
-    estimate:
+            $ref: "#/components/schemas/payment"    
+    order:
+      allOf:
+        - $ref: "#/components/schemas/orderReadOnly"
+        - $ref: "#/components/schemas/orderEditable"
+    itemReadOnly:
       type: object
       properties:
         id:
           type: string
-          example: "1"
-        customer_id:
+          example: "56057"        
+        tool_type:
           type: string
-          example: "353"
-        site_id:
-          type: string
-          example: "88678"
-        organization_name:
-          type: string
-          example: "Indow HQ"
-        owner:
-          type: string
-          example: "adminuser"
-        estimate_total:
-          type: number
-          format: double
-          example: 100
-        name:
-          type: string
-          example: "Museum"
-        parent_estimate_id:
-          type: string
-          example: "120955"          
+          example: "laser"
+          nullable: true
         updated_at:
           type: string
           format: date-time
-          example: "2021-11-26T07:20:54Z"          
-        items:
-          type: array
-          items:
-            $ref: "#/components/schemas/item"
-        sales_modifiers:
-          type: array
-          items:
-            $ref: "#/components/schemas/sales_modifier"
-    item:
+          example: "2021-11-26T07:20:54-08:00"                        
+    itemPost:
       type: object
       properties:
         order_id:
@@ -1367,6 +1395,19 @@ components:
           type: string
           example: "88673"
           nullable: true
+        price:
+          type: number
+          format: double
+          nullable: true
+          example: 144
+        price_override:
+          type: number
+          format: double
+          nullable: true
+          example: 144
+    itemPatch:
+      type: object
+      properties:
         shape:
           type: string
           example: "Rectangle"
@@ -1455,33 +1496,27 @@ components:
         special_geometry:
           type: boolean
           default: false
-        price:
-          type: number
-          format: double
-          nullable: true
-          example: 144
-        price_override:
-          type: number
-          format: double
-          nullable: true
-          example: 144
-        tool_type:
-          type: string
-          example: "laser"
-          nullable: true
-        id:
-          type: string
-          example: "803555"
-        updated_at:
-          type: string
-          format: date-time
-          example: "2021-11-26T07:20:54Z"
-    sales_modifier:
+    item:
+      allOf:
+         - $ref: "#/components/schemas/itemReadOnly"
+         - $ref: "#/components/schemas/itemEditable"
+    itemEditable:
+      allOf:
+         - $ref: "#/components/schemas/itemPatch"
+         - $ref: "#/components/schemas/itemPost"
+    sales_modifierReadOnly:
       type: object
       properties:
         id:
           type: string
           example: "88590"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2021-11-26T07:20:54-08:00"        
+    sales_modifierEditable:
+      type: object
+      properties:
         order_id:
           type: string
           example: "1"
@@ -1502,51 +1537,73 @@ components:
         amount:
           type: number
           format: double
-          example: 1
-        updated_at:
-          type: string
-          format: date-time
-          example: "2021-11-26T07:20:54Z"
-    payment:
+          example: 1          
+    sales_modifier:
+      allOf:
+        - $ref: "#/components/schemas/sales_modifierReadOnly"
+        - $ref: "#/components/schemas/sales_modifierEditable" 
+    paymentReadOnly:
       type: object
       properties:
-        order_id:
-          type: string
-          example: "1"
-        payment_received:
-          type: string
-          example: "2021-10-22"
-        payment_type:
-          type: string
-          example: "Check (down)"
-        payment_amount:
-          type: number
-          format: double
-          example: 200
         id:
           type: string
           example: "803555"
         updated_at:
           type: string
           format: date-time
-          example: "2021-11-26T07:20:54Z"          
+          example: "2021-11-26T07:20:54-08:00"    
+    paymentPatch:
+      type: object
+      properties:
+        payment_received:
+          type: string
+          format: date-time
+          example: "2021-11-26T07:20:54-08:00"    
+        payment_type:
+          type: string
+          example: "Check (down)"
+        payment_amount:
+          type: number
+          format: double
+          example: 200          
+    paymentPost:
+      type: object
+      properties:
+        order_id:
+          type: string
+          example: "1"
+    paymentEditable:
+      allOf:
+        - $ref: "#/components/schemas/paymentPatch"
+        - $ref: "#/components/schemas/paymentPost"
+    payment:
+      allOf:
+        - $ref: "#/components/schemas/paymentReadOnly"
+        - $ref: "#/components/schemas/paymentEditable"
     customer:
+      allOf:
+        - $ref: "#/components/schemas/customerReadOnly"
+        - $ref: "#/components/schemas/customerEditable"
+    customerEditable:
+      allOf:
+        - $ref: "#/components/schemas/customerPatch"
+        - $ref: "#/components/schemas/customerPost"
+    customerReadOnly:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "1"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2021-11-26T07:20:54-08:00"
+    customerPatch:
       type: object
       properties:
         crm_id:
           type: string
           example: "0030L00f00d1v7DXcqtest"
-          nullable: true
-        id:
-          type: string
-          example: "1"
-        site_id:
-          type: string
-          example: "2"
-          nullable: true
-        estimate_id:
-          type: string
-          example: "3"
           nullable: true
         first_name:
           type: string
@@ -1554,6 +1611,9 @@ components:
         last_name:
           type: string
           example: "Collerweather"
+        phone:
+          type: string
+          example: "555-555-5555"
         email:
           type: string
           example: "test@test.com"
@@ -1587,20 +1647,34 @@ components:
         shipping:
           type: boolean
           default: false
-        updated_at:
-          type: string
-          format: date-time
-          example: "2021-11-26T07:20:54Z"
         addresses:
           type: array
           items:
             $ref: "#/components/schemas/address"
-    address:
+    customerPost:
+      type: object
+      properties:
+        site_id:
+          type: string
+          example: "2"
+          nullable: true
+        estimate_id:
+          type: string
+          example: "3"
+          nullable: true
+    addressReadOnly:
       type: object
       properties:
         id:
           type: string
-          example: "82915"
+          example: "82915"      
+        updated_at:
+          type: string
+          format: date-time
+          example: "2021-11-26T07:20:54-08:00"          
+    addressEditable:
+      type: object
+      properties:
         customer_id:
           type: string
           example: "94257"
@@ -1634,16 +1708,23 @@ components:
         country:
           type: string
           example: "United States"
-        updated_at:
-          type: string
-          format: date-time
-          example: "2021-11-26T07:20:54Z"
-    site:
+    address:
+      allOf:
+      - $ref: "#/components/schemas/addressReadOnly"
+      - $ref: "#/components/schemas/addressEditable"
+    siteReadOnly:
       type: object
       properties:
         id:
           type: string
           example: "88686"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2021-11-26T07:20:54-08:00"
+    siteEditable:
+      type: object
+      properties:
         customer_id:
           type: string
           example: "353"
@@ -1671,64 +1752,85 @@ components:
         project_name:
           type: string
           example: "abcd"
-        updated_at:
-          type: string
-          format: date-time
-          example: "2021-11-26T07:20:54Z"
+    site:
+      allOf:
+        - $ref: "#/components/schemas/siteReadOnly"
+        - $ref: "#/components/schemas/siteEditable"
   requestBodies:
     order:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/order"
+            $ref: "#/components/schemas/orderEditable"
       description: order
       required: true
     estimate:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/estimate"
+            $ref: "#/components/schemas/estimateEditable"
       description: estimate
       required: true
-    customer:
+    customerPatch:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/customer"
+            $ref: "#/components/schemas/customerPatch"
       description: customer
       required: true
-    item:
+    customerPost:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/item"
+            $ref: "#/components/schemas/customerEditable"
+      description: customer
+      required: true  
+    itemPatch:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/itemPatch"
+      description: item
+      required: true
+    itemPost:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/itemEditable"
       description: item
       required: true
     site:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/site"
+            $ref: "#/components/schemas/siteEditable"
       description: site
       required: true
     address:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/address"
+            $ref: "#/components/schemas/addressEditable"
       description: address
       required: true
     sales_modifier:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/sales_modifier"
+            $ref: "#/components/schemas/sales_modifierEditable"
       description: sales modifier
       required: true
-    payment:
+    paymentPatch:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/payment"
+            $ref: "#/components/schemas/paymentPatch"
+      description: payment
+      required: true
+    paymentPost:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/paymentEditable"
       description: payment
       required: true
