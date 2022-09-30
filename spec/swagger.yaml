@@ -1557,8 +1557,8 @@ components:
       properties:
         payment_received:
           type: string
-          format: date-time
-          example: "2021-11-26T07:20:54-08:00"    
+          format: date
+          example: "2021-11-26"    
         payment_type:
           type: string
           example: "Check (down)"
