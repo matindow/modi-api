@@ -1488,6 +1488,15 @@ components:
         estimate_id:
           type: string
           example: "2"
+        type:
+          type: string
+          example: "sales tax - wa"
+        description:
+          type: string
+          example: "WA Sales Tax (4100 @ 7.9%)"
+        code:
+          type: string
+          example: "PIERCE CO NO RTA-4100-eff 04/12"
         quantity:
           type: integer
           format: int64
@@ -1499,10 +1508,16 @@ components:
           type: number
           format: double
           example: 100
-        amount:
-          type: number
-          format: double
-          example: 1
+        start_date:
+          type: string
+          format: date-time
+          nullable: true
+          example: "1969-12-31T00:00:00-08:00"
+        end_date:
+          type: string
+          format: date-time
+          nullable: true
+          example: "2099-05-02T00:00:00-08:00"
         updated_at:
           type: string
           format: date-time
@@ -1569,24 +1584,6 @@ components:
         owner:
           type: string
           example: "adminuser"
-        address:
-          type: string
-          example: "504 Branard St."
-        address_ext:
-          type: string
-          example: "Unit A"
-        city:
-          type: string
-          example: "Houston"
-        state:
-          type: string
-          example: "TX"
-        zipcode:
-          type: string
-          example: "77006"
-        shipping:
-          type: boolean
-          default: false
         updated_at:
           type: string
           format: date-time

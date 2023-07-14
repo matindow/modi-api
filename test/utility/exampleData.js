@@ -7,12 +7,15 @@ export const customer = {
 	create_estimate: false,
 	organization_name: 'Indow HQ',
 	owner: 'adminuser',
-	address: '504 Branard St.',
-	address_ext: 'Unit A',
-	city: 'Houston',
-	state: 'TX',
-	zipcode: '77006',
-	shipping: false,
+	addresses: [{
+		address: '504 Branard St.',
+		address_ext: 'Unit A',
+		city: 'Houston',
+		state: 'TX',
+		zipcode: '77006',
+		country: 'United States',
+		shipping: false
+	}]
 }
 
 export const item = {
